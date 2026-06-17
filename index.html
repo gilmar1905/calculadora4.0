@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Central de Inteligência - Controle Total</title>
+    <title>Central de Inteligência - Controle Total Proporcional</title>
     <style>
         /* ==========================================================================
            INTERFACE ESCURA PREMIUM (MOBILE-FIRST)
@@ -257,6 +257,7 @@
 <div class="container">
     <h1>Central de Inteligência</h1>
 
+    <!-- 💾 CENÁRIOS EM MEMÓRIA -->
     <div class="card">
         <div class="card-title">💾 Cenários em Memória</div>
         <div class="form-group">
@@ -270,6 +271,7 @@
         <div class="scenarios-list" id="scenarios_container"></div>
     </div>
 
+    <!-- 💰 ENTRADA OPERACIONAL -->
     <div class="card">
         <div class="card-title">💰 Entrada Operacional</div>
         <div class="form-group">
@@ -278,12 +280,13 @@
         </div>
         <div class="form-group">
             <label for="odd_total_3_mandantes">Odd Total Combinada (Múltipla Base)</label>
-            <input type="number" id="odd_total_3_mandantes" value="6.63" step="0.01" oninput="calcularTudo()">
+            <input type="number" id="odd_total_3_mandantes" value="6.63" step="0.01" oninput="calcularTudo(true)">
         </div>
     </div>
 
     <h2>Ecossistema Inicial (A)</h2>
 
+    <!-- JOGO 1 (DIA 1) -->
     <div class="card">
         <div class="card-title">⚽ Jogo 1 — Cobertura Imediata (Dia 1)</div>
         <div class="form-group">
@@ -291,7 +294,7 @@
         </div>
         <div class="form-group">
             <label for="odd_x2_j1">Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_x2_j1" value="2.10" step="0.01" oninput="calcularTudo()">
+            <input type="number" id="odd_x2_j1" value="2.10" step="0.01" oninput="calcularTudo(true)">
         </div>
         <div class="stake-control-panel">
             <label>Definir Stake do Jogo 1 (R$):</label>
@@ -313,6 +316,7 @@
         </div>
     </div>
 
+    <!-- JOGO 2 (DIA 2) -->
     <div class="card">
         <div class="card-title">⚽ Jogo 2 — Rolagem Condicional (Dia 2)</div>
         <div class="form-group">
@@ -320,7 +324,7 @@
         </div>
         <div class="form-group">
             <label for="odd_x2_j2">Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_x2_j2" value="2.02" step="0.01" oninput="calcularTudo()">
+            <input type="number" id="odd_x2_j2" value="2.02" step="0.01" oninput="calcularTudo(true)">
         </div>
         <div class="stake-control-panel">
             <label>Definir Stake do Jogo 2 (R$):</label>
@@ -342,6 +346,7 @@
         </div>
     </div>
 
+    <!-- JOGO 3 (DIA 1 - PARALELA) -->
     <div class="card">
         <div class="card-title">⚽ Jogo 3 — A Emenda Paralela (Dia 1)</div>
         <div class="form-group">
@@ -349,7 +354,7 @@
         </div>
         <div class="form-group">
             <label for="odd_x2_j3">Odd X2 Combinada Acumulada</label>
-            <input type="number" id="odd_x2_j3" value="27.43" step="0.01" oninput="calcularTudo()">
+            <input type="number" id="odd_x2_j3" value="27.43" step="0.01" oninput="calcularTudo(true)">
         </div>
         <div class="stake-control-panel">
             <label>Definir Stake da Emenda (R$):</label>
@@ -371,6 +376,7 @@
         </div>
     </div>
 
+    <!-- 📊 PAINEL DE AUDITORIA DO EXCEL -->
     <h2>Auditoria & Gestão de Risco</h2>
     <div class="card" style="border-color: #00b0ff;">
         <div class="card-title" style="color: #00b0ff;">📊 Consolidação Geral de Caixa</div>
@@ -396,30 +402,57 @@
 </div>
 
 <script>
-    // Controle de inicialização e estado
+    // Controle de estado e histórico de montante
     let manualAdjustments = { j1: 0, j2: 0, j3: 0 };
+    let ultimoMontanteValido = 100.00; 
     let isFirstLoad = true;
     let activeScenarioKey = null;
 
     window.onload = function() {
         renderizarCenarios();
-        calcularTudo();
+        // Na primeira carga, o sistema sugere a base automática matematicamente perfeita para R$100
+        calcularTudo(false);
     };
 
+    /**
+     * 🎛️ GERENCIADOR DE ENTRADA DINÂMICA (A MÁGICA DA PROPORÇÃO ESTÁ AQUI)
+     */
     function recalcularPorInput(origem) {
-        // Se o usuário digitou direto no input, sincronizamos o estado de controle manual
+        if (origem === 'principal') {
+            const novoMontante = parseFloat(document.getElementById('montante_principal').value) || 0;
+            
+            // Se o montante mudou de valor e ambos são maiores que zero, escalamos as ordens
+            if (ultimoMontanteValido > 0 && novoMontante > 0) {
+                const fatorProporcao = novoMontante / ultimoMontanteValido;
+                
+                // Reduz ou aumenta todas as stakes usando a mesma escala na mesma hora!
+                manualAdjustments.j1 = parseFloat((manualAdjustments.j1 * fatorProporcao).toFixed(2));
+                manualAdjustments.j2 = parseFloat((manualAdjustments.j2 * fatorProporcao).toFixed(2));
+                manualAdjustments.j3 = parseFloat((manualAdjustments.j3 * fatorProporcao).toFixed(2));
+            }
+            
+            if (novoMontante > 0) {
+                ultimoMontanteValido = novoMontante; // Atualiza a referência para a próxima mudança
+            }
+            
+            isFirstLoad = false; // Desativa a primeira carga pois o usuário já está interagindo
+            calcularTudo(false); // Roda atualizando os inputs visuais na tela
+            return;
+        }
+
+        // Se o usuário mexer diretamente nas caixas de texto das stakes dos jogos
         if(origem === 'j1') manualAdjustments.j1 = parseFloat(document.getElementById('input_stake_j1').value) || 0;
         if(origem === 'j2') manualAdjustments.j2 = parseFloat(document.getElementById('input_stake_j2').value) || 0;
         if(origem === 'j3') manualAdjustments.j3 = parseFloat(document.getElementById('input_stake_j3').value) || 0;
         
-        isFirstLoad = false; // Desativa sugestões automáticas base para não sobrescrever o que ele digitou
-        calcularTudo(true);
+        isFirstLoad = false; 
+        calcularTudo(true); // Trava os inputs visuais para não dar loop enquanto digita
     }
 
     /**
-     * 🧠 MATEMÁTICA ECOSSISTEMA A CORRIGIDA - CLAREZA DE CUSTOS E AUDITORIA CRUCIAL
+     * 🧠 SISTEMA DE AUDITORIA DE CAIXA NO TEMPO
      */
-    function calcularTudo(ignorarSugestao = false) {
+    function calcularTudo(ignorarVisualUpdate = false) {
         const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
         const oddTotal3Mandantes = parseFloat(document.getElementById('odd_total_3_mandantes').value) || 1;
         
@@ -427,8 +460,8 @@
         const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
         const oddX2AcumuladaJ3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
 
-        // Se for a primeira carga da página e o usuário não alterou nada, sugerimos a matemática base
-        if (isFirstLoad && !ignorarSugestao) {
+        // Sugestão analítica inicial base (Só roda na primeiríssima abertura da tela)
+        if (isFirstLoad) {
             let sugJ3 = montanteA / (oddX2AcumuladaJ3 - 1);
             manualAdjustments.j3 = parseFloat(sugJ3.toFixed(2));
 
@@ -439,36 +472,36 @@
             manualAdjustments.j2 = parseFloat(sugJ2.toFixed(2));
             
             isFirstLoad = false;
+            ultimoMontanteValido = montanteA;
         }
 
-        // Aplicação das Stakes Finais (Controladas 100% pelo usuário)
         const stakeJ1 = Math.max(0, manualAdjustments.j1);
         const stakeJ2 = Math.max(0, manualAdjustments.j2);
         const stakeJ3 = Math.max(0, manualAdjustments.j3);
 
-        // Atualiza os inputs visuais para refletir o valor atual
-        if(!ignorarSugestao) {
+        // Atualiza as caixas de texto das stakes com os valores reajustados pela proporção
+        if (!ignorarVisualUpdate) {
             document.getElementById('input_stake_j1').value = stakeJ1.toFixed(2);
             document.getElementById('input_stake_j2').value = stakeJ2.toFixed(2);
             document.getElementById('input_stake_j3').value = stakeJ3.toFixed(2);
         }
 
-        // --- LINHA DO TEMPO DOS CUSTOS REAL DA OPERAÇÃO ---
-        const custoNoTempoJ1 = montanteA + stakeJ3 + stakeJ1; // Dia 1: Montante + Emenda J3 + Cobertura J1
-        const custoNoTempoJ2 = montanteA + stakeJ3 + stakeJ1 + stakeJ2; // Dia 2: Avança acumulando o J2
-        const custoNoTempoJ3 = montanteA + stakeJ3 + stakeJ1 + stakeJ2; // Investimento completo totalizado
+        // --- LINHA DO TEMPO CRONOLÓGICA DOS CUSTOS ---
+        const custoNoTempoJ1 = montanteA + stakeJ3 + stakeJ1; 
+        const custoNoTempoJ2 = montanteA + stakeJ3 + stakeJ1 + stakeJ2; 
+        const custoNoTempoJ3 = montanteA + stakeJ3 + stakeJ1 + stakeJ2; 
 
-        // --- RETORNOS BRUTOS DAS PROTEÇÕES ---
+        // Retornos brutos
         const retBrutoJ1 = stakeJ1 * x2_j1;
         const retBrutoJ2 = stakeJ2 * x2_j2;
         const retBrutoJ3 = stakeJ3 * oddX2AcumuladaJ3;
 
-        // --- 📊 AUDITORIA INDIVIDUAL POR CENÁRIO DE DUPLA CHANCE ---
+        // Lucros líquidos reais baseados no tempo e na emenda
         const lucroLiquidoJ1 = retBrutoJ1 - custoNoTempoJ1;
         const lucroLiquidoJ2 = retBrutoJ2 - custoNoTempoJ2;
-        const lucroLiquidoJ3 = retBrutoJ3 - custoNoTempoJ3; // Retorno paralelo mantendo o ecossistema vivo
+        const lucroLiquidoJ3 = retBrutoJ3 - custoNoTempoJ3;
 
-        // Injeção de dados nos cards
+        // Atualização das Auditorias nos Cards
         document.getElementById('custo_tempo_j1').innerText = "R$ " + custoNoTempoJ1.toFixed(2);
         document.getElementById('retorno_j1').innerText = "R$ " + retBrutoJ1.toFixed(2);
         document.getElementById('lucro_j1').innerText = "R$ " + lucroLiquidoJ1.toFixed(2);
@@ -484,7 +517,7 @@
         document.getElementById('lucro_j3').innerText = "R$ " + lucroLiquidoJ3.toFixed(2);
         aplicarCorLucro('lucro_j3', lucroLiquidoJ3);
 
-        // --- 📊 CONSOLIDAÇÃO GERAL (AUDITORIA EXCEL DO CAIXA) ---
+        // --- 📊 AUDITORIA DE CAIXA ESTILO EXCEL ---
         const investimentoTotalGeral = montanteA + stakeJ1 + stakeJ2 + stakeJ3;
         const retornoPrincipalBruto = montanteA * oddTotal3Mandantes;
         const lucroFinalLiquidoMúltipla = retornoPrincipalBruto - investimentoTotalGeral;
@@ -497,20 +530,10 @@
         aplicarCorLucro('audit_lucro_final', lucroFinalLiquidoMúltipla);
     }
 
-    function aplicarCorLucro(id, valor) {
-        const elemento = document.getElementById(id);
-        if(valor >= -0.05) {
-            elemento.style.color = "#00e676";
-        } else {
-            elemento.style.color = "#ff5252";
-        }
-    }
-
     function ajustarStake(jogo, valor) {
         manualAdjustments[jogo] += valor;
         if(manualAdjustments[jogo] < 0) manualAdjustments[jogo] = 0;
         
-        // Sincroniza o campo de texto visual
         document.getElementById('input_stake_' + jogo).value = manualAdjustments[jogo].toFixed(2);
         calcularTudo(true);
     }
@@ -521,8 +544,17 @@
         calcularTudo(true);
     }
 
+    function aplicarCorLucro(id, valor) {
+        const elemento = document.getElementById(id);
+        if(valor >= -0.05) {
+            elemento.style.color = "#00e676";
+        } else {
+            elemento.style.color = "#ff5252";
+        }
+    }
+
     /**
-     * 💾 SALVAMENTO DE CENÁRIOS
+     * 💾 GESTÃO DE CENÁRIOS NA BANCA
      */
     function salvarCenario() {
         const nomeCenario = document.getElementById('scenario_name').value.trim();
@@ -541,7 +573,8 @@
             odd_x2_j1: document.getElementById('odd_x2_j1').value,
             odd_x2_j2: document.getElementById('odd_x2_j2').value,
             odd_x2_j3: document.getElementById('odd_x2_j3').value,
-            manualAdjustments: manualAdjustments
+            manualAdjustments: manualAdjustments,
+            ultimoMontanteValido: ultimoMontanteValido
         };
 
         const key = 'cenario_a_final_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
@@ -549,7 +582,7 @@
         activeScenarioKey = key;
         
         renderizarCenarios();
-        alert("Cenário '" + nomeCenario + "' gravado com sucesso com controle de stakes!");
+        alert("Cenário '" + nomeCenario + "' gravado com sucesso com as proporções salvas!");
     }
 
     function carregarCenario(key) {
@@ -567,10 +600,11 @@
         document.getElementById('odd_x2_j3').value = c.odd_x2_j3;
         
         manualAdjustments = c.manualAdjustments || { j1: 0, j2: 0, j3: 0 };
+        ultimoMontanteValido = c.ultimoMontanteValido ? parseFloat(c.ultimoMontanteValido) : parseFloat(c.montante);
         activeScenarioKey = key;
 
         renderizarCenarios();
-        calcularTudo();
+        calcularTudo(false);
     }
 
     function deletarCenario(e, key) {
@@ -579,7 +613,7 @@
             localStorage.removeItem(key);
             if (activeScenarioKey === key) activeScenarioKey = null;
             renderizarCenarios();
-            calcularTudo();
+            calcularTudo(false);
         }
     }
 
@@ -612,10 +646,11 @@
         document.getElementById('time_j2').value = '';
         document.getElementById('time_j3').value = '';
         manualAdjustments = { j1: 0, j2: 0, j3: 0 };
+        ultimoMontanteValido = 100.00;
         activeScenarioKey = null;
         isFirstLoad = true;
         renderizarCenarios();
-        calcularTudo();
+        calcularTudo(false);
     }
 </script>
 </body>
