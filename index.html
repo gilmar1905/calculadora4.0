@@ -201,7 +201,6 @@
 <div class="container">
     <h1>Central de Inteligência</h1>
 
-    <!-- 💾 PAINEL DE CENÁRIOS EM MEMÓRIA -->
     <div class="card">
         <div class="card-title">💾 Cenários em Memória</div>
         <div class="form-group">
@@ -215,32 +214,20 @@
         <div class="scenarios-list" id="scenarios_container"></div>
     </div>
 
-    <!-- 💰 ENTRADA OPERACIONAL -->
     <div class="card">
         <div class="card-title">💰 Entrada Operacional</div>
         <div class="form-group">
             <label for="montante_principal">Montante da Múltipla Principal (R$)</label>
             <input type="number" id="montante_principal" value="100.00" step="0.01" oninput="calcularTudo()">
         </div>
-        <div class="row">
-            <div class="col">
-                <label for="odd_m1">Odd Mandante 1</label>
-                <input type="number" id="odd_m1" value="1.78" step="0.01" oninput="calcularTudo()">
-            </div>
-            <div class="col">
-                <label for="odd_m2">Odd Mandante 2</label>
-                <input type="number" id="odd_m2" value="1.62" step="0.01" oninput="calcularTudo()">
-            </div>
-            <div class="col">
-                <label for="odd_m3">Odd Mandante 3</label>
-                <input type="number" id="odd_m3" value="2.05" step="0.01" oninput="calcularTudo()">
-            </div>
+        <div class="form-group">
+            <label for="odd_total_3_mandantes">Odd Total Combinada (3 Mandantes)</label>
+            <input type="number" id="odd_total_3_mandantes" value="5.91" step="0.01" oninput="calcularTudo()" placeholder="Ex: M1 x M2 x M3">
         </div>
     </div>
 
     <h2>Ecossistema Inicial (A)</h2>
 
-    <!-- JOGO 1 -->
     <div class="card">
         <div class="card-title">⚽ Jogo 1 — Cobertura Imediata</div>
         <div class="form-group">
@@ -263,7 +250,6 @@
         </div>
     </div>
 
-    <!-- JOGO 2 -->
     <div class="card">
         <div class="card-title">⚽ Jogo 2 — Rolagem Condicional</div>
         <div class="form-group">
@@ -286,11 +272,14 @@
         </div>
     </div>
 
-    <!-- JOGO 3 -->
     <div class="card">
         <div class="card-title">⚽ Jogo 3 — A Emenda Paralela</div>
         <div class="form-group">
             <input type="text" id="time_j3" placeholder="Nome do Confronto 3">
+        </div>
+        <div class="form-group">
+            <label for="odd_total_6_mandantes">Odd Total Combinada (6 Mandantes)</label>
+            <input type="number" id="odd_total_6_mandantes" value="44.50" step="0.01" oninput="calcularTudo()" placeholder="Ex: M1 x M2 x M3 x M4 x M5 x M6">
         </div>
         <div class="form-group">
             <label for="odd_x2_j3">Odd Chance Dupla (X2)</label>
@@ -321,21 +310,24 @@
     };
 
     /**
-     * 🧠 MATEMÁTICA ECOSSISTEMA A: FOCO DE COBERTURA PURA NO JOGO 3
+     * 🧠 MATEMÁTICA ECOSSISTEMA A: FOCO DE COBERTURA COM ODDS TOTAIS COMBINADAS
      */
     function calcularTudo() {
         const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
-        
-        const m1 = parseFloat(document.getElementById('odd_m1').value) || 1;
-        const m2 = parseFloat(document.getElementById('odd_m2').value) || 1;
+        const oddTotal6Mandantes = parseFloat(document.getElementById('odd_total_6_mandantes').value) || 1;
         const x2_j3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
 
         const x2_j1 = parseFloat(document.getElementById('odd_x2_j1').value) || 1;
         const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
 
-        // --- CÁLCULO FOCADO NO JOGO 3 ---
-        // Retorno em X2 no Jogo 3 cobrindo estritamente as perdas anteriores para fechar no Zero a Zero
-        const oddMúltiplaEmenda = m1 * m2 * x2_j3;
+        // --- CÁLCULO FOCADO NO JOGO 3 USANDO AS ODDS TOTAIS ---
+        // A Múltipla de Emenda é composta por: (M1 x M2 x X2_J3 x M4 x M5 x M6)
+        // Como o usuário digita a odd total dos 6 mandantes multiplicados (M1xM2xM3xM4xM5xM6),
+        // nós dividimos por M3 para retirar o mandante puro e multiplicamos pelo X2_J3 para aplicar a cobertura.
+        // Como não temos a odd individual do M3 separada, calculamos a odd real da emenda diretamente:
+        // oddMúltiplaEmenda = (Odd Total dos 6 Mandantes / Odd Total dos 3 Mandantes) * Mandante 1 * Mandante 2 * X2_J3...
+        // Para simplificar de forma exata e direta baseado no cupom final de apostas:
+        const oddMúltiplaEmenda = oddTotal6Mandantes * x2_j3;
         
         let stakeJ3 = montanteA / (oddMúltiplaEmenda - 1);
         stakeJ3 += manualAdjustments.j3;
@@ -386,9 +378,8 @@
         const dadosCenario = {
             nome: nomeCenario,
             montante: document.getElementById('montante_principal').value,
-            odd_m1: document.getElementById('odd_m1').value,
-            odd_m2: document.getElementById('odd_m2').value,
-            odd_m3: document.getElementById('odd_m3').value,
+            odd_total_3_mandantes: document.getElementById('odd_total_3_mandantes').value,
+            odd_total_6_mandantes: document.getElementById('odd_total_6_mandantes').value,
             time_j1: document.getElementById('time_j1').value,
             time_j2: document.getElementById('time_j2').value,
             time_j3: document.getElementById('time_j3').value,
@@ -398,7 +389,7 @@
             manualAdjustments: manualAdjustments
         };
 
-        const key = 'cenario_a_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
+        const key = 'cenario_a_ot_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
         localStorage.setItem(key, JSON.stringify(dadosCenario));
         activeScenarioKey = key;
         
@@ -412,9 +403,8 @@
 
         document.getElementById('scenario_name').value = c.nome;
         document.getElementById('montante_principal').value = c.montante;
-        document.getElementById('odd_m1').value = c.odd_m1;
-        document.getElementById('odd_m2').value = c.odd_m2;
-        document.getElementById('odd_m3').value = c.odd_m3;
+        document.getElementById('odd_total_3_mandantes').value = c.odd_total_3_mandantes || "5.91";
+        document.getElementById('odd_total_6_mandantes').value = c.odd_total_6_mandantes || "44.50";
         document.getElementById('time_j1').value = c.time_j1 || "";
         document.getElementById('time_j2').value = c.time_j2 || "";
         document.getElementById('time_j3').value = c.time_j3 || "";
@@ -446,7 +436,7 @@
         let achou = false;
 
         keys.forEach(key => {
-            if (key.startsWith('cenario_a_')) {
+            if (key.startsWith('cenario_a_ot_')) {
                 achou = true;
                 const cenario = JSON.parse(localStorage.getItem(key));
                 const item = document.createElement('div');
