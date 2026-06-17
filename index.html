@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Central de Inteligência - Ecossistema A Pro</title>
+    <title>Central de Inteligência - Ecossistema A</title>
     <style>
         /* ==========================================================================
            INTERFACE ESCURA PREMIUM (MOBILE-FIRST) - FIEL À IMAGEM DO USUÁRIO
@@ -99,21 +99,10 @@
         .row {
             display: flex;
             gap: 10px;
-            margin-bottom: 10px;
         }
 
         .col {
             flex: 1;
-        }
-
-        .odd-summary-badge {
-            background: #2d3446;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            text-align: center;
-            margin-top: 5px;
-            border: 1px solid #37474f;
         }
 
         /* BOTÕES DE TOQUE RÁPIDO */
@@ -155,6 +144,7 @@
         .control-buttons {
             display: flex;
             gap: 8px;
+            margin-bottom: 10px;
         }
 
         .btn-ctrl {
@@ -172,7 +162,23 @@
         .btn-ctrl:active { background-color: #37474f; }
         .btn-refresh { background-color: #00b0ff; color: #ffffff; }
 
-        /* TABLE ESTILO EXCEL PARA AUDITORIA */
+        /* AUDITORIA INTERNA DOS CARDS */
+        .mini-audit {
+            background-color: #1a1d29;
+            border-top: 1px solid #2d3446;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            color: #b0bec5;
+        }
+
+        .mini-audit span strong {
+            color: #ffffff;
+        }
+
+        /* TABLE ESTILO EXCEL PARA AUDITORIA GERAL */
         .excel-table {
             width: 100%;
             border-collapse: collapse;
@@ -258,49 +264,14 @@
     </div>
 
     <div class="card">
-        <div class="card-title">💰 Bloco Superior: Painel de Odds por Time</div>
-        
+        <div class="card-title">💰 Entrada Operacional</div>
         <div class="form-group">
             <label for="montante_principal">Montante da Múltipla Principal (R$)</label>
             <input type="number" id="montante_principal" value="100.00" step="0.01" oninput="calcularTudo()">
         </div>
-
-        <label style="margin-top: 10px; font-weight: bold; color: #00b0ff;">Múltipla Inicial (3 primeiros times):</label>
-        <div class="row">
-            <div class="col">
-                <label>Time 1</label>
-                <input type="number" id="odd_t1" value="1.80" step="0.01" oninput="calcularTudo()">
-            </div>
-            <div class="col">
-                <label>Time 2</label>
-                <input type="number" id="odd_t2" value="1.75" step="0.01" oninput="calcularTudo()">
-            </div>
-            <div class="col">
-                <label>Time 3</label>
-                <input type="number" id="odd_t3" value="1.85" step="0.01" oninput="calcularTudo()">
-            </div>
-        </div>
-        <div class="odd-summary-badge">
-            Odd Combinada Base (T1 x T2 x T3): <span id="calc_total_3_mandantes" class="highlight-blue" style="font-weight: bold;">1.00</span>
-        </div>
-
-        <label style="margin-top: 15px; font-weight: bold; color: #ff9100;">Extensão da Múltipla (Próximos 3 times):</label>
-        <div class="row">
-            <div class="col">
-                <label>Time 4</label>
-                <input type="number" id="odd_t4" value="1.90" step="0.01" oninput="calcularTudo()">
-            </div>
-            <div class="col">
-                <label>Time 5</label>
-                <input type="number" id="odd_t5" value="1.65" step="0.01" oninput="calcularTudo()">
-            </div>
-            <div class="col">
-                <label>Time 6</label>
-                <input type="number" id="odd_t6" value="2.10" step="0.01" oninput="calcularTudo()">
-            </div>
-        </div>
-        <div class="odd-summary-badge">
-            Odd Combinada Total (6 Times): <span id="calc_total_6_mandantes" class="highlight-orange" style="font-weight: bold;">1.00</span>
+        <div class="form-group">
+            <label for="odd_total_3_mandantes">Odd Total Combinada (3 Mandantes)</label>
+            <input type="number" id="odd_total_3_mandantes" value="5.91" step="0.01" oninput="calcularTudo()" placeholder="Ex: M1 x M2 x M3">
         </div>
     </div>
 
@@ -325,6 +296,10 @@
                 <button class="btn-ctrl" onclick="ajustarStake('j1', 5)">+5</button>
                 <button class="btn-ctrl btn-refresh" onclick="reordenarSistema('j1')">🔄</button>
             </div>
+            <div class="mini-audit">
+                <span>Retorno: <strong id="retorno_j1">R$ 0.00</strong></span>
+                <span>Lucro Líquido: <strong id="lucro_j1" class="highlight-green">R$ 0.00</strong></span>
+            </div>
         </div>
     </div>
 
@@ -346,6 +321,10 @@
                 <button class="btn-ctrl" onclick="ajustarStake('j2', 1)">+1</button>
                 <button class="btn-ctrl" onclick="ajustarStake('j2', 5)">+5</button>
                 <button class="btn-ctrl btn-refresh" onclick="reordenarSistema('j2')">🔄</button>
+            </div>
+            <div class="mini-audit">
+                <span>Retorno: <strong id="retorno_j2">R$ 0.00</strong></span>
+                <span>Lucro Líquido: <strong id="lucro_j2" class="highlight-green">R$ 0.00</strong></span>
             </div>
         </div>
     </div>
@@ -369,6 +348,10 @@
                 <button class="btn-ctrl" onclick="ajustarStake('j3', 5)">+5</button>
                 <button class="btn-ctrl btn-refresh" onclick="reordenarSistema('j3')">🔄</button>
             </div>
+            <div class="mini-audit">
+                <span>Retorno: <strong id="retorno_j3">R$ 0.00</strong></span>
+                <span>Lucro Líquido: <strong id="lucro_j3" class="highlight-green">R$ 0.00</strong></span>
+            </div>
         </div>
     </div>
 
@@ -389,10 +372,6 @@
                 <td class="value-cell highlight-green" id="audit_lucro_final">R$ 0.00</td>
             </tr>
             <tr>
-                <td class="label-cell">Retorno Líquido (Cenário Zero a Zero J3):</td>
-                <td class="value-cell text-muted" id="audit_retorno_segurança" style="color: #aaa;">R$ 0.00</td>
-            </tr>
-            <tr>
                 <td class="label-cell">Conta de Risco (Exposição Proporcional):</td>
                 <td class="value-cell highlight-orange" id="audit_conta_risco">0.00%</td>
             </tr>
@@ -411,33 +390,17 @@
     };
 
     /**
-     * 🧠 MATEMÁTICA ECOSSISTEMA A: PROCESSAMENTO INDIVIDUAL DE ODDS POR TIME
+     * 🧠 MATEMÁTICA ECOSSISTEMA A COM AUDITORIAS POR APOSTA DE PROTEÇÃO
      */
     function calcularTudo() {
         const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
-
-        // Captura e cálculo das Odds individuais do Bloco Superior
-        const t1 = parseFloat(document.getElementById('odd_t1').value) || 1;
-        const t2 = parseFloat(document.getElementById('odd_t2').value) || 1;
-        const t3 = parseFloat(document.getElementById('odd_t3').value) || 1;
-        const t4 = parseFloat(document.getElementById('odd_t4').value) || 1;
-        const t5 = parseFloat(document.getElementById('odd_t5').value) || 1;
-        const t6 = parseFloat(document.getElementById('odd_t6').value) || 1;
-
-        // Multiplicações automáticas estilo planilha Excel
-        const oddTotal3Mandantes = t1 * t2 * t3;
-        const oddTotal6Mandantes = oddTotal3Mandantes * t4 * t5 * t6;
-
-        // Atualiza as badges informativas de odds acumuladas
-        document.getElementById('calc_total_3_mandantes').innerText = oddTotal3Mandantes.toFixed(2);
-        document.getElementById('calc_total_6_mandantes').innerText = oddTotal6Mandantes.toFixed(2);
-
-        // Odds de cobertura das Duplas Chance nos cards
+        const oddTotal3Mandantes = parseFloat(document.getElementById('odd_total_3_mandantes').value) || 1;
         const oddX2AcumuladaJ3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
+
         const x2_j1 = parseFloat(document.getElementById('odd_x2_j1').value) || 1;
         const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
 
-        // --- CÁLCULO DINÂMICO DE STAKES ---
+        // --- CÁLCULO DAS STAKES ---
         let stakeJ3 = montanteA / (oddX2AcumuladaJ3 - 1);
         stakeJ3 += manualAdjustments.j3;
         if(stakeJ3 < 0) stakeJ3 = 0;
@@ -452,26 +415,41 @@
         stakeJ2 += manualAdjustments.j2;
         if(stakeJ2 < 0) stakeJ2 = 0;
 
-        // Atualização visual dos displays de stakes
+        // Atualização dos displays de stakes recomendadas
         document.getElementById('display_stake_j1').innerText = "R$ " + stakeJ1.toFixed(2);
         document.getElementById('display_stake_j2').innerText = "R$ " + stakeJ2.toFixed(2);
         document.getElementById('display_stake_j3').innerText = "R$ " + stakeJ3.toFixed(2);
 
-        // --- 📊 SISTEMA DE AUDITORIA CONSOLIDADO ---
+        // --- GASTO REAL EM TEMPO REAL ---
         const investimentoTotal = montanteA + stakeJ1 + stakeJ2 + stakeJ3;
+
+        // --- 📊 AUDITORIA INDIVIDUAL POR APOSTA DE PROTEÇÃO ---
+        // Jogo 1
+        const retBrutoJ1 = stakeJ1 * x2_j1;
+        const liqJ1 = retBrutoJ1 - investimentoTotal;
+        document.getElementById('retorno_j1').innerText = "R$ " + retBrutoJ1.toFixed(2);
+        document.getElementById('lucro_j1').innerText = "R$ " + liqJ1.toFixed(2);
+
+        // Jogo 2
+        const retBrutoJ2 = stakeJ2 * x2_j2;
+        const liqJ2 = retBrutoJ2 - investimentoTotal;
+        document.getElementById('retorno_j2').innerText = "R$ " + retBrutoJ2.toFixed(2);
+        document.getElementById('lucro_j2').innerText = "R$ " + liqJ2.toFixed(2);
+
+        // Jogo 3 (A Emenda)
+        const retBrutoJ3 = stakeJ3 * oddX2AcumuladaJ3;
+        const liqJ3 = retBrutoJ3 - investimentoTotal;
+        document.getElementById('retorno_j3').innerText = "R$ " + retBrutoJ3.toFixed(2);
+        document.getElementById('lucro_j3').innerText = "R$ " + liqJ3.toFixed(2);
+
+        // --- 📊 AUDITORIA CONSOLIDADA GERAL ---
         const retornoPrincipalBruto = montanteA * oddTotal3Mandantes;
         const lucroFinalLiquido = retornoPrincipalBruto - investimentoTotal;
-        
-        const retornoBrutoEmenda = stakeJ3 * oddX2AcumuladaJ3;
-        const retornoZeroAZeroLiquido = retornoBrutoEmenda - investimentoTotal;
-
         const contaRiscoPercentual = montanteA > 0 ? ((investimentoTotal - montanteA) / montanteA) * 100 : 0;
 
-        // Atualização da Tabela Excel de auditoria
         document.getElementById('audit_montante').innerText = "R$ " + montanteA.toFixed(2);
         document.getElementById('audit_investimento_total').innerText = "R$ " + investimentoTotal.toFixed(2);
         document.getElementById('audit_lucro_final').innerText = "R$ " + lucroFinalLiquido.toFixed(2);
-        document.getElementById('audit_retorno_segurança').innerText = "R$ " + retornoZeroAZeroLiquido.toFixed(2);
         document.getElementById('audit_conta_risco').innerText = contaRiscoPercentual.toFixed(2) + "%";
     }
 
@@ -490,7 +468,7 @@
     }
 
     /**
-     * 💾 GERENCIADOR DE CENÁRIOS ATUALIZADO COM OS 6 TIMES INDIVIDUAIS
+     * 💾 GERENCIADOR DE CENÁRIOS (LOCALSTORAGE)
      */
     function salvarCenario() {
         const nomeCenario = document.getElementById('scenario_name').value.trim();
@@ -502,12 +480,7 @@
         const dadosCenario = {
             nome: nomeCenario,
             montante: document.getElementById('montante_principal').value,
-            odd_t1: document.getElementById('odd_t1').value,
-            odd_t2: document.getElementById('odd_t2').value,
-            odd_t3: document.getElementById('odd_t3').value,
-            odd_t4: document.getElementById('odd_t4').value,
-            odd_t5: document.getElementById('odd_t5').value,
-            odd_t6: document.getElementById('odd_t6').value,
+            odd_total_3_mandantes: document.getElementById('odd_total_3_mandantes').value,
             time_j1: document.getElementById('time_j1').value,
             time_j2: document.getElementById('time_j2').value,
             time_j3: document.getElementById('time_j3').value,
@@ -517,12 +490,12 @@
             manualAdjustments: manualAdjustments
         };
 
-        const key = 'cenario_a_pro_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
+        const key = 'cenario_a_audit_v2_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
         localStorage.setItem(key, JSON.stringify(dadosCenario));
         activeScenarioKey = key;
         
         renderizarCenarios();
-        alert("Cenário '" + nomeCenario + "' salvo com sucesso!");
+        alert("Cenário '" + nomeCenario + "' salvo com auditorias virtuais!");
     }
 
     function carregarCenario(key) {
@@ -531,13 +504,7 @@
 
         document.getElementById('scenario_name').value = c.nome;
         document.getElementById('montante_principal').value = c.montante;
-        document.getElementById('odd_t1').value = c.odd_t1 || "1.80";
-        document.getElementById('odd_t2').value = c.odd_t2 || "1.75";
-        document.getElementById('odd_t3').value = c.odd_t3 || "1.85";
-        document.getElementById('odd_t4').value = c.odd_t4 || "1.90";
-        document.getElementById('odd_t5').value = c.odd_t5 || "1.65";
-        document.getElementById('odd_t6').value = c.odd_t6 || "2.10";
-        
+        document.getElementById('odd_total_3_mandantes').value = c.odd_total_3_mandantes || "5.91";
         document.getElementById('time_j1').value = c.time_j1 || "";
         document.getElementById('time_j2').value = c.time_j2 || "";
         document.getElementById('time_j3').value = c.time_j3 || "";
@@ -569,7 +536,7 @@
         let achou = false;
 
         keys.forEach(key => {
-            if (key.startsWith('cenario_a_pro_')) {
+            if (key.startsWith('cenario_a_audit_v2_')) {
                 achou = true;
                 const cenario = JSON.parse(localStorage.getItem(key));
                 const item = document.createElement('div');
