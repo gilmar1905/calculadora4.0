@@ -124,7 +124,7 @@
         .btn-green { background-color: #00e676; color: #12141c; }
         .btn-dark { background-color: #2d3446; color: #ffffff; border: 1px solid #37474f; }
 
-        /* PAINEL DE CONTROLE DE STAKES (STAKE-CONTROL-PANEL) */
+        /* PAINEL DE CONTROLE DE STAKES */
         .stake-control-panel {
             background-color: #12141c;
             border-radius: 8px;
@@ -160,6 +160,38 @@
 
         .btn-ctrl:active { background-color: #37474f; }
         .btn-refresh { background-color: #00b0ff; color: #ffffff; }
+
+        /* TABLE ESTILO EXCEL PARA AUDITORIA */
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        .excel-table td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #2d3446;
+            font-size: 0.9rem;
+        }
+
+        .excel-table td.label-cell {
+            color: #90a4ae;
+            font-weight: 500;
+        }
+
+        .excel-table td.value-cell {
+            text-align: right;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .excel-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight-green { color: #00e676 !important; }
+        .highlight-blue { color: #00b0ff !important; }
+        .highlight-orange { color: #ff9100 !important; }
 
         /* CONTAINER DE CENÁRIOS SALVOS */
         .scenarios-list {
@@ -293,6 +325,33 @@
             </div>
         </div>
     </div>
+
+    <h2>Auditoria & Gestão de Risco</h2>
+    <div class="card" style="border-color: #00b0ff;">
+        <div class="card-title" style="color: #00b0ff;">📊 Consolidação Geral de Caixa</div>
+        <table class="excel-table">
+            <tr>
+                <td class="label-cell">Valor Apostado (Montante Principal):</td>
+                <td class="value-cell id-val" id="audit_montante">R$ 0.00</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Total de Investimento (Gasto Real):</td>
+                <td class="value-cell highlight-blue" id="audit_investimento_total">R$ 0.00</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Lucro Final Líquido (Se a Principal bater):</td>
+                <td class="value-cell highlight-green" id="audit_lucro_final">R$ 0.00</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Retorno Líquido (Cenário Zero a Zero J3):</td>
+                <td class="value-cell text-muted" id="audit_retorno_segurança" style="color: #aaa;">R$ 0.00</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Conta de Risco (Exposição Proporcional):</td>
+                <td class="value-cell highlight-orange" id="audit_conta_risco">0.00%</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -306,38 +365,54 @@
     };
 
     /**
-     * 🧠 MATEMÁTICA ECOSSISTEMA A: COBERTURA DIRETA VIA ODD ACUMULADA NO JOGO 3
+     * 🧠 MATEMÁTICA ECOSSISTEMA A COM PLANILHA DE AUDITORIA INTEGRADA
      */
     function calcularTudo() {
         const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
+        const oddTotal3Mandantes = parseFloat(document.getElementById('odd_total_3_mandantes').value) || 1;
         const oddX2AcumuladaJ3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
 
         const x2_j1 = parseFloat(document.getElementById('odd_x2_j1').value) || 1;
         const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
 
-        // --- CÁLCULO DIRETO DO JOGO 3 ---
-        // Como a própria odd digitada no Jogo 3 já é o bilhete completo acumulado (6 times),
-        // calculamos a stake necessária para que o retorno dessa acumulada zere o prejuízo do Montante.
+        // --- CÁLCULO DAS STAKES DE PROTEÇÃO ---
         let stakeJ3 = montanteA / (oddX2AcumuladaJ3 - 1);
         stakeJ3 += manualAdjustments.j3;
         if(stakeJ3 < 0) stakeJ3 = 0;
 
-        // JOGO 1: Retorna o Montante Principal + o custo investido na emenda do Jogo 3
         const passivoDia1 = montanteA + stakeJ3;
         let stakeJ1 = passivoDia1 / (x2_j1 - 1);
         stakeJ1 += manualAdjustments.j1;
         if(stakeJ1 < 0) stakeJ1 = 0;
 
-        // JOGO 2: Proteção total de perdas acumuladas (Montante + J3 + J1)
         const passivoAcumuladoDia2 = montanteA + stakeJ3 + stakeJ1;
         let stakeJ2 = passivoAcumuladoDia2 / (x2_j2 - 1);
         stakeJ2 += manualAdjustments.j2;
         if(stakeJ2 < 0) stakeJ2 = 0;
 
-        // Atualização da interface mobile
+        // Atualização da interface de stakes
         document.getElementById('display_stake_j1').innerText = "R$ " + stakeJ1.toFixed(2);
         document.getElementById('display_stake_j2').innerText = "R$ " + stakeJ2.toFixed(2);
         document.getElementById('display_stake_j3').innerText = "R$ " + stakeJ3.toFixed(2);
+
+        // --- 📊 SISTEMA DE AUDITORIA ESTILO EXCEL ---
+        const investimentoTotal = montanteA + stakeJ1 + stakeJ2 + stakeJ3;
+        const retornoPrincipalBruto = montanteA * oddTotal3Mandantes;
+        const lucroFinalLiquido = retornoPrincipalBruto - investimentoTotal;
+        
+        // Retorno caso acione a emenda do Jogo 3 (Retorno Bruto da Emenda - Todo o Gasto Real)
+        const retornoBrutoEmenda = stakeJ3 * oddX2AcumuladaJ3;
+        const retornoZeroAZeroLiquido = retornoBrutoEmenda - investimentoTotal;
+
+        // Conta de Risco: Mede o peso das coberturas sobre a aposta base inicial
+        const contaRiscoPercentual = montanteA > 0 ? ((investimentoTotal - montanteA) / montanteA) * 100 : 0;
+
+        // Injeção de dados no painel Excel
+        document.getElementById('audit_montante').innerText = "R$ " + montanteA.toFixed(2);
+        document.getElementById('audit_investimento_total').innerText = "R$ " + investimentoTotal.toFixed(2);
+        document.getElementById('audit_lucro_final').innerText = "R$ " + lucroFinalLiquido.toFixed(2);
+        document.getElementById('audit_retorno_segurança').innerText = "R$ " + retornoZeroAZeroLiquido.toFixed(2);
+        document.getElementById('audit_conta_risco').innerText = contaRiscoPercentual.toFixed(2) + "%";
     }
 
     function ajustarStake(jogo, valor) {
@@ -377,12 +452,12 @@
             manualAdjustments: manualAdjustments
         };
 
-        const key = 'cenario_a_final_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
+        const key = 'cenario_a_audit_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
         localStorage.setItem(key, JSON.stringify(dadosCenario));
         activeScenarioKey = key;
         
         renderizarCenarios();
-        alert("Cenário '" + nomeCenario + "' salvo com sucesso!");
+        alert("Cenário '" + nomeCenario + "' salvo com auditoria!");
     }
 
     function carregarCenario(key) {
@@ -423,7 +498,7 @@
         let achou = false;
 
         keys.forEach(key => {
-            if (key.startsWith('cenario_a_final_')) {
+            if (key.startsWith('cenario_a_audit_')) {
                 achou = true;
                 const cenario = JSON.parse(localStorage.getItem(key));
                 const item = document.createElement('div');
