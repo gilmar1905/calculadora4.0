@@ -596,4 +596,27 @@
                 const item = document.createElement('div');
                 item.className = 'scenario-item' + (activeScenarioKey === key ? ' active' : '');
                 item.onclick = () => carregarCenario(key);
-                item.innerHTML =
+                item.innerHTML = `<span>📂 ${cenario.nome}</span> <span class="delete-scenario" onclick="deletarCenario(event, '${key}')">×</span>`;
+                container.appendChild(item);
+            }
+        });
+
+        if (!achou) {
+            container.innerHTML = '<span style="color: #607d8b; font-size: 0.85rem; padding: 5px;">Nenhum cenário salvo.</span>';
+        }
+    }
+
+    function limparTela() {
+        document.getElementById('scenario_name').value = '';
+        document.getElementById('time_j1').value = '';
+        document.getElementById('time_j2').value = '';
+        document.getElementById('time_j3').value = '';
+        manualAdjustments = { j1: 0, j2: 0, j3: 0 };
+        activeScenarioKey = null;
+        isFirstLoad = true;
+        renderizarCenarios();
+        calcularTudo();
+    }
+</script>
+</body>
+</html>
