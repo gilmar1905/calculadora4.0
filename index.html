@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Central de Inteligência - Duplo Ecossistema</title>
+    <style>
+        /* ==========================================================================
+           CONFIGURAÇÕES GERAIS E INTERFACE ESCURA PREMIUM (MOBILE-FIRST)
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #12141c;
+            color: #ffffff;
+            padding: 15px;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            text-align: center;
+            color: #00e676;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* CARD MODELO PADRÃO */
+        .card {
+            background-color: #1e2230;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #2d3446;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            color: #00b0ff;
+            border-bottom: 1px solid #2d3446;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* INPUTS GRANDES E ACESSÍVEIS PARA CELULAR */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: #90a4ae;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            background-color: #12141c;
+            border: 1.5px solid #37474f;
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00b0ff;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        /* BOTÕES DE CONTROLE GIGANTES (TOQUE FÁCIL) */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: filter 0.2s;
+        }
+
+        .btn:active {
+            filter: brightness(0.8);
+        }
+
+        .btn-green { background-color: #00e676; color: #12141c; }
+        .btn-blue { background-color: #00b0ff; color: #ffffff; }
+        .btn-red { background-color: #ff5252; color: #ffffff; }
+        .btn-dark { background-color: #2d3446; color: #ffffff; border: 1px solid #37474f; }
+
+        /* PAINEL DE CONTROLE DE STAKES (MUDANÇA MANUAL) */
+        .stake-control-panel {
+            background-color: #12141c;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px dashed #37474f;
+        }
+
+        .stake-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00e676;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-ctrl {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #2d3446;
+            color: #ffffff;
+        }
+
+        .btn-ctrl:active { background-color: #37474f; }
+
+        /* SISTEMA DE BANCO DE DADOS LOCAL (CENÁRIOS) */
+        .scenarios-list {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            margin-top: 10px;
+        }
+
+        .scenario-item {
+            background-color: #2d3446;
+            padding: 10px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid #37474f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scenario-item.active {
+            background-color: #00b0ff;
+            color: #ffffff;
+            border-color: #00b0ff;
+        }
+
+        .delete-scenario {
+            color: #ff5252;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0 4px;
+        }
+
+        /* TIMING & SEÇÃO CONDICIONAL OCULTA */
+        .hidden-ecosystem {
+            display: none;
+            border: 2px solid #ff5252;
+            border-radius: 12px;
+            padding-top: 5px;
+        }
+
+        .badge {
+            background-color: #ff5252;
+            color: white;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Central de Inteligência</h1>
+
+    <!-- ==========================================================================
+       PAINEL SUPERIOR: BANCO DE DADOS DE CENÁRIOS MÚLTIPLOS
+       ========================================================================== -->
+    <div class="card">
+        <div class="card-title">💾 Cenários em Memória</div>
+        <div class="form-group">
+            <label for="scenario_name">Nome do Cenário Atual</label>
+            <input type="text" id="scenario_name" placeholder="Ex: Rodada do Brasileirão, Finais...">
+        </div>
+        <div class="row">
+            <div class="col"><button class="btn btn-green" onclick="salvarCenario()">Salvar</button></div>
+            <div class="col"><button class="btn btn-dark" onclick="limparTela()">Novo</button></div>
+        </div>
+        <div class="scenarios-list" id="scenarios_container">
+            <!-- Os cenários salvos via localStorage aparecerão dinamicamente aqui -->
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       CABEÇALHO FIXO: MONTANTE PRINCIPAL E CONFIGURAÇÃO DE ODDS MÚLTIPLAS
+       ========================================================================== -->
+    <div class="card">
+        <div class="card-title">💰 Entrada Operacional</div>
+        <div class="form-group">
+            <label for="montante_principal">Montante da Múltipla Principal (R$)</label>
+            <input type="number" id="montante_principal" value="100.00" step="0.01" oninput="calcularTudo()">
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="odd_m1">Odd Mandante 1</label>
+                <input type="number" id="odd_m1" value="2.00" step="0.01" oninput="calcularTudo()">
+            </div>
+            <div class="col">
+                <label for="odd_m2">Odd Mandante 2</label>
+                <input type="number" id="odd_m2" value="2.00" step="0.01" oninput="calcularTudo()">
+            </div>
+            <div class="col">
+                <label for="odd_m3">Odd Mandante 3</label>
+                <input type="number" id="odd_m3" value="2.00" step="0.01" oninput="calcularTudo()">
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       ECOSSISTEMA A: JOGOS DA OPERAÇÃO INICIAL (BLOCO A)
+       ========================================================================== -->
+    <h2>Ecossistema Inicial (A)</h2>
+
+    <!-- JOGO 1 -->
+    <div class="card">
+        <div class="card-title">⚽ Jogo 1 — Cobertura Imediata</div>
+        <div class="form-group">
+            <input type="text" id="time_j1" class="time-input" placeholder="Nome do Confronto 1">
+        </div>
+        <div class="form-group">
+            <label for="odd_x2_j1">Odd Chance Dupla (X2)</label>
+            <input type="number" id="odd_x2_j1" value="2.02" step="0.01" oninput="calcularTudo()">
+        </div>
+        <div class="stake-control-panel">
+            <label>Stake Recomendada (Retornar Montante):</label>
+            <div class="stake-display" id="display_stake_j1">R$ 0.00</div>
+            <div class="control-buttons">
+                <button class="btn-ctrl" onclick="ajustarStake('j1', -5)">-5</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j1', -1)">-1</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j1', 1)">+1</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j1', 5)">+5</button>
+                <button class="btn-ctrl" style="background-color: #00b0ff;" onclick="reordenarSistema('j1')">🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JOGO 2 -->
+    <div class="card">
+        <div class="card-title">⚽ Jogo 2 — Rolagem Condicional</div>
+        <div class="form-group">
+            <input type="text" id="time_j2" class="time-input" placeholder="Nome do Confronto 2">
+        </div>
+        <div class="form-group">
+            <label for="odd_x2_j2">Odd Chance Dupla (X2)</label>
+            <input type="number" id="odd_x2_j2" value="2.10" step="0.01" oninput="calcularTudo()">
+        </div>
+        <div class="stake-control-panel">
+            <label>Stake Recomendada (Retornar Toda Operação):</label>
+            <div class="stake-display" id="display_stake_j2">R$ 0.00</div>
+            <div class="control-buttons">
+                <button class="btn-ctrl" onclick="ajustarStake('j2', -5)">-5</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j2', -1)">-1</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j2', 1)">+1</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j2', 5)">+5</button>
+                <button class="btn-ctrl" style="background-color: #00b0ff;" onclick="reordenarSistema('j2')">🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JOGO 3 -->
+    <div class="card">
+        <div class="card-title">⚽ Jogo 3 — A Emenda Paralela</div>
+        <div class="form-group">
+            <input type="text" id="time_j3" class="time-input" placeholder="Nome do Confronto 3">
+        </div>
+        <div class="form-group">
+            <label for="odd_x2_j3">Odd Chance Dupla (X2)</label>
+            <input type="number" id="odd_x2_j3" value="1.80" step="0.01" oninput="calcularTudo()">
+        </div>
+        <div class="stake-control-panel">
+            <label>Stake da Super Múltipla de Emenda:</label>
+            <div class="stake-display" id="display_stake_j3" style="color: #00b0ff;">R$ 0.00</div>
+            <div class="control-buttons">
+                <button class="btn-ctrl" onclick="ajustarStake('j3', -1)">-1</button>
+                <button class="btn-ctrl" onclick="ajustarStake('j3', 1)">+1</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+       ECOSSISTEMA B: OPERAÇÃO ESPELHO (ATIVADA APENAS POR GATILHO CONDICIONAL)
+       ========================================================================== -->
+    <div id="ecosystem_b_section" class="hidden-ecosystem">
+        <h2 style="color: #ff5252; margin-left: 5px; margin-top: 10px;">Cenário Espelho Ativo (B) <span class="badge">GATILHO 3 ACIONADO</span></h2>
+        
+        <!-- ENTRADAS DO BLOCO B -->
+        <div class="card" style="border-color: #ff5252;">
+            <div class="card-title" style="color: #ff5252;">💰 Dados Operação B</div>
+            <div class="row">
+                <div class="col">
+                    <label for="odd_m4">Odd Mandante 4</label>
+                    <input type="number" id="odd_m4" value="2.00" step="0.01" oninput="calcularTudo()">
+                </div>
+                <div class="col">
+                    <label for="odd_m5">Odd Mandante 5</label>
+                    <input type="number" id="odd_m5" value="2.00" step="0.01" oninput="calcularTudo()">
+                </div>
+                <div class="col">
+                    <label for="odd_m6">Odd Mandante 6</label>
+                    <input type="number" id="odd_m6" value="2.00" step="0.01" oninput="calcularTudo()">
+                </div>
+            </div>
+        </div>
+
+        <!-- JOGO 4 -->
+        <div class="card">
+            <div class="card-title">⚽ Jogo 4 — Proteção de Bloco</div>
+            <div class="form-group">
+                <input type="text" id="time_j4" class="time-input" placeholder="Nome do Confronto 4">
+            </div>
+            <div class="form-group">
+                <label for="odd_x2_j4">Odd Chance Dupla (X2)</label>
+                <input type="number" id="odd_x2_j4" value="2.07" step="0.01" oninput="calcularTudo()">
+            </div>
+            <div class="stake-control-panel">
+                <label>Stake Recomendada (Recuperação Total A + B):</label>
+                <div class="stake-display" id="display_stake_j4">R$ 0.00</div>
+                <div class="control-buttons">
+                    <button class="btn-ctrl" onclick="ajustarStake('j4', -5)">-5</button>
+                    <button class="btn-ctrl" onclick="ajustarStake('j4', -1)">-1</button>
+                    <button class="btn-ctrl" onclick="ajustarStake('j4', 1)">+1</button>
+                    <button class="btn-ctrl" onclick="ajustarStake('j4', 5)">+5</button>
+                    <button class="btn-ctrl" style="background-color: #00b0ff;" onclick="reordenarSistema('j4')">🔄</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- JOGO 5 -->
+        <div class="card">
+            <div class="card-title">⚽ Jogo 5 — Cobertura Final de Rolagem</div>
+            <div class="form-group">
+                <input type="text" id="time_j5" class="time-input" placeholder="Nome do Confronto 5">
+            </div>
+            <div class="form-group">
+                <label for="odd_x2_j5">Odd Chance Dupla (X2)</label>
+                <input type="number" id="odd_x2_j5" value="1.93" step="0.01" oninput="calcularTudo()">
+            </div>
+            <div class="stake-control-panel">
+                <label>Stake Recomendada (Recuperação do Ecossistema Consolidado):</label>
+                <div class="stake-display" id="display_stake_j5">R$ 0.00</div>
+                <div class="control-buttons">
+                    <button class="btn-ctrl" onclick="ajustarStake('j5', -5)">-5</button>
+                    <button class="btn-ctrl" onclick="ajustarStake('j5', -1)">-1</button>
+                    <button class="btn-ctrl" onclick="ajustarStake('j5', 1)">+1</button>
+                    <button class="btn-ctrl" onclick="ajustarStake('j5', 5)">+5</button>
+                    <button class="btn-ctrl" style="background-color: #00b0ff;" onclick="reordenarSistema('j5')">🔄</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================================
+   ALGORITMO INTELIGENTE E ENGENHARIA RECURSIVA DE MULTIPLOS ECOSSISTEMAS
+   ========================================================================== -->
+<script>
+    // Memória global de ajustes manuais das stakes feitos pelos botões grandes (+ / -)
+    let manualAdjustments = { j1: 0, j2: 0, j3: 0, j4: 0, j5: 0 };
+    let activeScenarioKey = null;
+
+    // Inicialização automática do sistema
+    window.onload = function() {
+        renderizarCenarios();
+        calcularTudo();
+    };
+
+    /**
+     * 🧠 NÚCLEO MATEMÁTICO DO SISTEMA
+     * Processa as equações lineares para zerar o vazamento financeiro
+     */
+    function calcularTudo() {
+        // Captura das variáveis bases
+        const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
+        
+        const m1 = parseFloat(document.getElementById('odd_m1').value) || 1;
+        const m2 = parseFloat(document.getElementById('odd_m2').value) || 1;
+        const m3 = parseFloat(document.getElementById('odd_m3').value) || 1;
+        
+        const x2_j1 = parseFloat(document.getElementById('odd_x2_j1').value) || 1;
+        const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
+        const x2_j3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
+
+        const m4 = parseFloat(document.getElementById('odd_m4').value) || 1;
+        const m5 = parseFloat(document.getElementById('odd_m5').value) || 1;
+        const m6 = parseFloat(document.getElementById('odd_m6').value) || 1;
+
+        const x2_j4 = parseFloat(document.getElementById('odd_x2_j4').value) || 1;
+        const x2_j5 = parseFloat(document.getElementById('odd_x2_j5').value) || 1;
+
+        // --- ECOSSISTEMA A: CÁLCULOS MATEMÁTICOS DE RETORNO DO MONTANTE ---
+        
+        // Jogo 3 (A Emenda): Base da Múltipla Paralela Otimizada (R$ 5,00 padrão ou modificado)
+        let stakeJ3 = 5.00 + manualAdjustments.j3;
+        if(stakeJ3 < 0) stakeJ3 = 0;
+
+        // Passivo Fixo do Dia 1: O que sai da sua carteira inicialmente
+        const passivoDia1 = montanteA + stakeJ3;
+
+        // Fórmula Algebrica Isolada para Cobertura Perfeita do Jogo 1 (Chance Dupla)
+        // Ganho = Stake_J1 * Odd_X1. Custo = Passivo + Stake_J1. Queremos Ganho = Custo.
+        let stakeJ1 = passivoDia1 / (x2_j1 - 1);
+        stakeJ1 += manualAdjustments.j1; // Injeta o controle manual dos botões grandes
+        if(stakeJ1 < 0) stakeJ1 = 0;
+
+        // Se o Jogo 1 passar em Mandante, a proteção morre. O passivo empurrado para o Dia 2 (Jogo 2) é:
+        const passivoAcumuladoDia2 = montanteA + stakeJ3 + stakeJ1;
+        
+        // Cálculo algebrico para a proteção do Jogo 2
+        let stakeJ2 = passivoAcumuladoDia2 / (x2_j2 - 1);
+        stakeJ2 += manualAdjustments.j2;
+        if(stakeJ2 < 0) stakeJ2 = 0;
+
+        // Renderiza os outputs do Ecossistema A na interface mobile
+        document.getElementById('display_stake_j1').innerText = "R$ " + stakeJ1.toFixed(2);
+        document.getElementById('display_stake_j2').innerText = "R$ " + stakeJ2.toFixed(2);
+        document.getElementById('display_stake_j3').innerText = "R$ " + stakeJ3.toFixed(2);
+
+        // --- CONTROLE DE FLUXO DO GATILHO (ECOSSISTEMA B) ---
+        // Se as odds de emenda permitirem que a proteção do Jogo 3 exista, abrimos a visualização do bloco B
+        const sectionB = document.getElementById('ecosystem_b_section');
+        
+        // Simulação condicional: Ativamos visualmente o bloco B caso o Jogo 3 possua valores de odds definidos
+        if (x2_j3 > 1) {
+            sectionB.style.display = "block";
+            
+            // O custo que viaja do Ecossistema A para o B caso o Jogo 3 dê zebra
+            const custoTotalEcossistemaA = montanteA + stakeJ3 + stakeJ1 + stakeJ2;
+
+            // Jogo 4: Proteção do primeiro dia da fase espelho
+            let stakeJ4 = custoTotalEcossistemaA / (x2_j4 - 1);
+            stakeJ4 += manualAdjustments.j4;
+            if(stakeJ4 < 0) stakeJ4 = 0;
+
+            // Jogo 5: Consolidação de rolagem de custos
+            const passivoAcumuladoDia5 = custoTotalEcossistemaA + stakeJ4;
+            let stakeJ5 = passivoAcumuladoDia5 / (x2_j5 - 1);
+            stakeJ5 += manualAdjustments.j5;
+            if(stakeJ5 < 0) stakeJ5 = 0;
+
+            // Renderiza outputs do bloco B
+            document.getElementById('display_stake_j4').innerText = "R$ " + stakeJ4.toFixed(2);
+            document.getElementById('display_stake_j5').innerText = "R$ " + stakeJ5.toFixed(2);
+        } else {
+            sectionB.style.display = "none";
+        }
+    }
+
+    /**
+     * 🕹️ AJUSTE MANUAL DAS STAKES
+     * Executado pelos botões de controle gigantes (+ e -) para operação rápida em telas touch
+     */
+    function ajustarStake(jogo, valor) {
+        manualAdjustments[jogo] += valor;
+        calcularTudo();
+    }
+
+    /**
+     * 🔄 BOTÃO ORDENAR (RECONCILIAÇÃO)
+     * Reseta as alterações manuais do jogo selecionado e recalcula o equilíbrio ideal do ecossistema
+     */
+    function reordenarSistema(jogo) {
+        manualAdjustments[jogo] = 0;
+        calcularTudo();
+    }
+
+    /**
+     * 💾 SISTEMA DE PERSISTÊNCIA EM BANCO DE DADOS LOCAL (LOCALSTORAGE)
+     * Salva e recupera cenários múltiplos na memória sem apagar os anteriores
+     */
+    function salvarCenario() {
+        const nomeCenario = document.getElementById('scenario_name').value.trim();
+        if (!nomeCenario) {
+            alert("Por favor, digite um nome para salvar o seu cenário.");
+            return;
+        }
+
+        // Empacota todos os dados da tela (Times, Odds e Modificadores)
+        const dadosCenario = {
+            nome: nomeCenario,
+            montante: document.getElementById('montante_principal').value,
+            odd_m1: document.getElementById('odd_m1').value,
+            odd_m2: document.getElementById('odd_m2').value,
+            odd_m3: document.getElementById('odd_m3').value,
+            odd_m4: document.getElementById('odd_m4').value,
+            odd_m5: document.getElementById('odd_m5').value,
+            odd_m6: document.getElementById('odd_m6').value,
+            time_j1: document.getElementById('time_j1').value,
+            time_j2: document.getElementById('time_j2').value,
+            time_j3: document.getElementById('time_j3').value,
+            time_j4: document.getElementById('time_j4').value,
+            time_j5: document.getElementById('time_j5').value,
+            odd_x2_j1: document.getElementById('odd_x2_j1').value,
+            odd_x2_j2: document.getElementById('odd_x2_j2').value,
+            odd_x2_j3: document.getElementById('odd_x2_j3').value,
+            odd_x2_j4: document.getElementById('odd_x2_j4').value,
+            odd_x2_j5: document.getElementById('odd_x2_j5').value,
+            manualAdjustments: manualAdjustments
+        };
+
+        const key = 'cenario_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
+        localStorage.setItem(key, JSON.stringify(dadosCenario));
+        activeScenarioKey = key;
+        
+        renderizarCenarios();
+        alert("Cenário '" + nomeCenario + "' armazenado com sucesso!");
+    }
+
+    /**
+     * CARREGA UM CENÁRIO ARMAZENADO AO CLICAR NO CARD
+     */
+    function carregarCenario(key) {
+        const cenarioRaw = localStorage.getItem(key);
+        if (!cenarioRaw) return;
+
+        const c = JSON.parse(cenarioRaw);
+        
+        // Repovoa os inputs
+        document.getElementById('scenario_name').value = c.nome;
+        document.getElementById('montante_principal').value = c.montante;
+        document.getElementById('odd_m1').value = c.odd_m1;
+        document.getElementById('odd_m2').value = c.odd_m2;
+        document.getElementById('odd_m3').value = c.odd_m3;
+        document.getElementById('odd_m4').value = c.odd_m4 || "2.00";
+        document.getElementById('odd_m5').value = c.odd_m5 || "2.00";
+        document.getElementById('odd_m6').value = c.odd_m6 || "2.00";
+        document.getElementById('time_j1').value = c.time_j1 || "";
+        document.getElementById('time_j2').value = c.time_j2 || "";
+        document.getElementById('time_j3').value = c.time_j3 || "";
+        document.getElementById('time_j4').value = c.time_j4 || "";
+        document.getElementById('time_j5').value = c.time_j5 || "";
+        document.getElementById('odd_x2_j1').value = c.odd_x2_j1;
+        document.getElementById('odd_x2_j2').value = c.odd_x2_j2;
+        document.getElementById('odd_x2_j3').value = c.odd_x2_j3;
+        document.getElementById('odd_x2_j4').value = c.odd_x2_j4 || "2.07";
+        document.getElementById('odd_x2_j5').value = c.odd_x2_j5 || "1.93";
+        
+        manualAdjustments = c.manualAdjustments || { j1: 0, j2: 0, j3: 0, j4: 0, j5: 0 };
+        activeScenarioKey = key;
+
+        renderizarCenarios();
+        calcularTudo();
+    }
+
+    /**
+     * APAGA UM CENÁRIO ESPECÍFICO DA LISTA
+     */
+    function deletarCenario(e, key) {
+        e.stopPropagation(); // Impede o clique de carregar o cenário ao tentar excluí-lo
+        if (confirm("Deseja remover este cenário da memória?")) {
+            localStorage.removeItem(key);
+            if (activeScenarioKey === key) activeScenarioKey = null;
+            renderizarCenarios();
+        }
+    }
+
+    /**
+     * ATUALIZA A LINHA DE CARDS COMPATÍVEIS COM O TOQUE
+     */
+    function renderizarCenarios() {
+        const container = document.getElementById('scenarios_container');
+        container.innerHTML = '';
+        
+        let keys = Object.keys(localStorage);
+        let cenariosEncontrados = false;
+
+        keys.forEach(key => {
+            if (key.startsWith('cenario_')) {
+                cenariosEncontrados = true;
+                const cenario = JSON.parse(localStorage.getItem(key));
+                
+                const item = document.createElement('div');
+                item.className = 'scenario-item' + (activeScenarioKey === key ? ' active' : '');
+                item.onclick = () => carregarCenario(key);
+                item.innerHTML = `<span>📂 ${cenario.nome}</span> <span class="delete-scenario" onclick="deletarCenario(event, '${key}')">×</span>`;
+                
+                container.appendChild(item);
+            }
+        });
+
+        if (!cenariosEncontrados) {
+            container.innerHTML = '<span style="color: #607d8b; font-size: 0.9rem; padding: 5px;">Nenhum cenário salvo.</span>';
+        }
+    }
+
+    /**
+     * LIMPA A TELA PARA CONFIGURAR UMA NOVA OPERAÇÃO DO ZERO
+     */
+    function limparTela() {
+        document.getElementById('scenario_name').value = '';
+        document.getElementById('time_j1').value = '';
+        document.getElementById('time_j2').value = '';
+        document.getElementById('time_j3').value = '';
+        document.getElementById('time_j4').value = '';
+        document.getElementById('time_j5').value = '';
+        manualAdjustments = { j1: 0, j2: 0, j3: 0, j4: 0, j5: 0 };
+        activeScenarioKey = null;
+        renderizarCenarios();
+        calcularTudo();
+    }
+</script>
+
+</body>
+</html>
