@@ -278,12 +278,8 @@
             <input type="text" id="time_j3" placeholder="Nome do Confronto 3">
         </div>
         <div class="form-group">
-            <label for="odd_total_6_mandantes">Odd Total Combinada (6 Mandantes)</label>
-            <input type="number" id="odd_total_6_mandantes" value="44.50" step="0.01" oninput="calcularTudo()" placeholder="Ex: M1 x M2 x M3 x M4 x M5 x M6">
-        </div>
-        <div class="form-group">
-            <label for="odd_x2_j3">Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_x2_j3" value="1.80" step="0.01" oninput="calcularTudo()">
+            <label for="odd_x2_j3">Odd Chance Dupla Combinada (X2 Acumulada)</label>
+            <input type="number" id="odd_x2_j3" value="44.50" step="0.01" oninput="calcularTudo()">
         </div>
         <div class="stake-control-panel">
             <label>Stake da Super Múltipla de Emenda (Retorno Zero a Zero):</label>
@@ -310,26 +306,19 @@
     };
 
     /**
-     * 🧠 MATEMÁTICA ECOSSISTEMA A: FOCO DE COBERTURA COM ODDS TOTAIS COMBINADAS
+     * 🧠 MATEMÁTICA ECOSSISTEMA A: COBERTURA DIRETA VIA ODD ACUMULADA NO JOGO 3
      */
     function calcularTudo() {
         const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
-        const oddTotal6Mandantes = parseFloat(document.getElementById('odd_total_6_mandantes').value) || 1;
-        const x2_j3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
+        const oddX2AcumuladaJ3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
 
         const x2_j1 = parseFloat(document.getElementById('odd_x2_j1').value) || 1;
         const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
 
-        // --- CÁLCULO FOCADO NO JOGO 3 USANDO AS ODDS TOTAIS ---
-        // A Múltipla de Emenda é composta por: (M1 x M2 x X2_J3 x M4 x M5 x M6)
-        // Como o usuário digita a odd total dos 6 mandantes multiplicados (M1xM2xM3xM4xM5xM6),
-        // nós dividimos por M3 para retirar o mandante puro e multiplicamos pelo X2_J3 para aplicar a cobertura.
-        // Como não temos a odd individual do M3 separada, calculamos a odd real da emenda diretamente:
-        // oddMúltiplaEmenda = (Odd Total dos 6 Mandantes / Odd Total dos 3 Mandantes) * Mandante 1 * Mandante 2 * X2_J3...
-        // Para simplificar de forma exata e direta baseado no cupom final de apostas:
-        const oddMúltiplaEmenda = oddTotal6Mandantes * x2_j3;
-        
-        let stakeJ3 = montanteA / (oddMúltiplaEmenda - 1);
+        // --- CÁLCULO DIRETO DO JOGO 3 ---
+        // Como a própria odd digitada no Jogo 3 já é o bilhete completo acumulado (6 times),
+        // calculamos a stake necessária para que o retorno dessa acumulada zere o prejuízo do Montante.
+        let stakeJ3 = montanteA / (oddX2AcumuladaJ3 - 1);
         stakeJ3 += manualAdjustments.j3;
         if(stakeJ3 < 0) stakeJ3 = 0;
 
@@ -379,7 +368,6 @@
             nome: nomeCenario,
             montante: document.getElementById('montante_principal').value,
             odd_total_3_mandantes: document.getElementById('odd_total_3_mandantes').value,
-            odd_total_6_mandantes: document.getElementById('odd_total_6_mandantes').value,
             time_j1: document.getElementById('time_j1').value,
             time_j2: document.getElementById('time_j2').value,
             time_j3: document.getElementById('time_j3').value,
@@ -389,7 +377,7 @@
             manualAdjustments: manualAdjustments
         };
 
-        const key = 'cenario_a_ot_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
+        const key = 'cenario_a_final_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
         localStorage.setItem(key, JSON.stringify(dadosCenario));
         activeScenarioKey = key;
         
@@ -404,7 +392,6 @@
         document.getElementById('scenario_name').value = c.nome;
         document.getElementById('montante_principal').value = c.montante;
         document.getElementById('odd_total_3_mandantes').value = c.odd_total_3_mandantes || "5.91";
-        document.getElementById('odd_total_6_mandantes').value = c.odd_total_6_mandantes || "44.50";
         document.getElementById('time_j1').value = c.time_j1 || "";
         document.getElementById('time_j2').value = c.time_j2 || "";
         document.getElementById('time_j3').value = c.time_j3 || "";
@@ -436,7 +423,7 @@
         let achou = false;
 
         keys.forEach(key => {
-            if (key.startsWith('cenario_a_ot_')) {
+            if (key.startsWith('cenario_a_final_')) {
                 achou = true;
                 const cenario = JSON.parse(localStorage.getItem(key));
                 const item = document.createElement('div');
