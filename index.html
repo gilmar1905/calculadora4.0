@@ -2,656 +2,456 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Central de Inteligência - Controle Total Proporcional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Ecossistema 5.0 - Novo Modelo de Custos</title>
     <style>
-        /* ==========================================================================
-           INTERFACE ESCURA PREMIUM (MOBILE-FIRST)
-           ========================================================================== */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+        :root {
+            --bg-principal: #0d1117;
+            --bg-card: #161b22;
+            --bg-input: #090d13;
+            --borda: #21262d;
+            --texto-principal: #c9d1d9;
+            --texto-secundario: #8b949e;
+            --verde-sucesso: #2ea44f;
+            --azul-destaque: #1f6feb;
+            --laranja-alerta: #f0883e;
         }
 
         body {
-            background-color: #12141c;
-            color: #ffffff;
-            padding: 15px;
-            padding-bottom: 60px;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .container {
-            max-width: 500px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        h1 {
-            font-size: 1.3rem;
-            text-align: center;
-            color: #00e676;
-            margin-bottom: 20px;
+        .titulo-secao {
+            font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: bold;
-        }
-
-        h2 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 20px 0 12px 5px;
-            color: #ffffff;
+            color: var(--texto-secundario);
+            margin: 10px 0 5px 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .card {
-            background-color: #1e2230;
-            border-radius: 12px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--borda);
+            border-radius: 6px;
             padding: 16px;
-            margin-bottom: 16px;
-            border: 1px solid #2d3446;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .card-title {
-            font-size: 1rem;
-            color: #00b0ff;
-            border-bottom: 1px solid #2d3446;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
             display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .form-group {
-            margin-bottom: 14px;
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         label {
-            display: block;
-            font-size: 0.8rem;
-            color: #90a4ae;
-            margin-bottom: 6px;
+            font-size: 12px;
+            color: var(--texto-secundario);
         }
 
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            background-color: #12141c;
-            border: 1.5px solid #2d3446;
-            border-radius: 8px;
-            color: #ffffff;
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: border-color 0.2s;
+        input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--borda);
+            border-radius: 6px;
+            color: var(--texto-principal);
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
         }
 
         input:focus {
-            outline: none;
-            border-color: #00b0ff;
+            border-color: var(--azul-destaque);
         }
 
-        .row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .col {
-            flex: 1;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.05rem;
-            font-weight: bold;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            transition: filter 0.2s;
-        }
-
-        .btn:active { filter: brightness(0.8); }
-        .btn-green { background-color: #00e676; color: #12141c; }
-        .btn-dark { background-color: #2d3446; color: #ffffff; border: 1px solid #37474f; }
-
-        /* PAINEL DE CONTROLE DE STAKES COM INPUT EDITÁVEL */
-        .stake-control-panel {
-            background-color: #12141c;
-            border-radius: 8px;
+        .stake-input {
+            border: 1px solid var(--verde-sucesso);
+            border-radius: 6px;
             padding: 12px;
-            margin-top: 12px;
-            border: 1px dashed #2d3446;
-        }
-
-        .stake-input-container {
-            margin-bottom: 10px;
-        }
-
-        .stake-editable-input {
             text-align: center;
-            color: #00e676 !important;
-            font-size: 1.3rem !important;
-            border-color: #00e676 !important;
-        }
-
-        .control-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .btn-ctrl {
-            flex: 1;
-            padding: 12px;
-            font-size: 1.05rem;
+            font-size: 18px;
             font-weight: bold;
-            border: none;
+            color: var(--verde-sucesso);
+            background-color: rgba(46, 164, 79, 0.05);
+            outline: none;
+            width: calc(100% - 26px);
+        }
+
+        .stake-input:focus {
+            border-color: #34d399;
+            background-color: rgba(46, 164, 79, 0.1);
+        }
+
+        .btn-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        button {
+            background-color: #21262d;
+            border: 1px solid #30363d;
+            color: var(--texto-principal);
             border-radius: 6px;
+            padding: 8px 0;
+            font-size: 12px;
+            font-weight: bold;
             cursor: pointer;
-            background-color: #2d3446;
-            color: #ffffff;
         }
 
-        .btn-ctrl:active { background-color: #37474f; }
-        .btn-refresh { background-color: #00b0ff; color: #ffffff; }
-
-        /* AUDITORIA INTERNA POR DIA/CENÁRIO */
-        .mini-audit-box {
-            background-color: #1a1d29;
-            border: 1px solid #2d3446;
-            border-radius: 6px;
-            padding: 10px;
-            font-size: 0.85rem;
+        button:active {
+            background-color: #282e38;
         }
 
-        .mini-audit-line {
+        button.ativo {
+            background-color: var(--azul-destaque);
+            border-color: #388bfd;
+        }
+
+        .info-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
-            color: #b0bec5;
+            font-size: 11px;
+            color: var(--texto-secundario);
         }
 
-        .mini-audit-line:last-child {
-            margin-bottom: 0;
+        .valor-destaque {
+            color: var(--texto-principal);
         }
 
-        .mini-audit-line strong {
-            color: #ffffff;
-        }
-
-        /* TABELA DE AUDITORIA GERAL EXCEL */
-        .excel-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 5px;
-        }
-
-        .excel-table td {
-            padding: 10px 5px;
-            border-bottom: 1px solid #2d3446;
-            font-size: 0.9rem;
-        }
-
-        .excel-table td.label-cell {
-            color: #90a4ae;
-            font-weight: 500;
-        }
-
-        .excel-table td.value-cell {
-            text-align: right;
+        .valor-sucesso {
+            color: var(--verde-sucesso);
             font-weight: bold;
-            color: #ffffff;
         }
 
-        .excel-table tr:last-child td {
+        .card-auditoria {
+            border-color: rgba(31, 111, 235, 0.4);
+        }
+
+        .linha-auditoria {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(33, 38, 45, 0.5);
+        }
+
+        .linha-auditoria:last-child {
             border-bottom: none;
         }
 
-        .highlight-green { color: #00e676 !important; }
-        .highlight-blue { color: #00b0ff !important; }
-        .highlight-orange { color: #ff9100 !important; }
-
-        .scenarios-list {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            margin-top: 12px;
+        .auditoria-label {
+            color: var(--texto-secundario);
         }
 
-        .scenario-item {
-            background-color: #2d3446;
-            padding: 8px 14px;
-            border-radius: 20px;
-            white-space: nowrap;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border: 1px solid #37474f;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .scenario-item.active {
-            background-color: #00b0ff;
-            color: #ffffff;
-            border-color: #00b0ff;
-        }
-
-        .delete-scenario {
-            color: #ff5252;
+        .auditoria-valor {
             font-weight: bold;
-            font-size: 1.1rem;
         }
+
+        .auditoria-valor.azul { color: var(--azul-destaque); }
+        .auditoria-valor.vermelho { color: var(--laranja-alerta); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Central de Inteligência</h1>
 
-    <!-- 💾 CENÁRIOS EM MEMÓRIA -->
+    <div class="titulo-secao">💰 Entrada Operacional</div>
     <div class="card">
-        <div class="card-title">💾 Cenários em Memória</div>
-        <div class="form-group">
-            <label for="scenario_name">Nome do Cenário Atual</label>
-            <input type="text" id="scenario_name" placeholder="Ex: Rodada do Brasileirão, Finais...">
+        <div class="input-group">
+            <label>Montante da Múltipla Principal (R$)</label>
+            <input type="number" id="montante_principal" value="10.00" step="0.50">
         </div>
-        <div class="row">
-            <div class="col"><button class="btn btn-green" onclick="salvarCenario()">Salvar</button></div>
-            <div class="col"><button class="btn btn-dark" onclick="limparTela()">Novo</button></div>
+        <div class="input-group">
+            <label>Odd Total Combinada (Múltipla Base - 3 Mandantes)</label>
+            <input type="number" id="odd_principal" value="4.13" step="0.01">
         </div>
-        <div class="scenarios-list" id="scenarios_container"></div>
+        <div class="info-row" style="background: rgba(31, 111, 235, 0.05); padding: 8px; border-radius: 4px; border: 1px dashed rgba(31, 111, 235, 0.3); margin-top: 4px;">
+            <span>Retorno Bruto da Principal:</span>
+            <span id="txt_retorno_bruto_topo" style="color: var(--azul-destaque); font-weight: bold;">R$ 0,00</span>
+        </div>
     </div>
 
-    <!-- 💰 ENTRADA OPERACIONAL -->
+    <div class="titulo-secao">⚽ Coberturas e Amarrações</div>
+    
     <div class="card">
-        <div class="card-title">💰 Entrada Operacional</div>
-        <div class="form-group">
-            <label for="montante_principal">Montante da Múltipla Principal (R$)</label>
-            <input type="number" id="montante_principal" value="100.00" step="0.01" oninput="recalcularPorInput('principal')">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
+            <span>🤝 Card 1 — Empate do Jogo 1 (Dia 1)</span>
         </div>
-        <div class="form-group">
-            <label for="odd_total_3_mandantes">Odd Total Combinada (Múltipla Base)</label>
-            <input type="number" id="odd_total_3_mandantes" value="6.63" step="0.01" oninput="calcularTudo(true)">
+        <div class="input-group">
+            <label>Odd do Empate (J1)</label>
+            <input type="number" id="odd_j1" value="4.15" step="0.01">
+        </div>
+        <label style="margin-bottom: -6px;">Definir/Digitar Stake (R$):</label>
+        <input type="number" class="stake-input" id="stake_j1" value="4.55" step="0.01">
+        <div class="btn-container">
+            <button onclick="ajustar('j1', -5)">-5</button>
+            <button onclick="ajustar('j1', -1)">-1</button>
+            <button onclick="ajustar('j1', 1)">+1</button>
+            <button onclick="ajustar('j1', 5)">+5</button>
+            <button class="ativo" onclick="sincronizarProporcional('j1')">🔄</button>
+        </div>
+        <div class="info-row">
+            <span>Custo Imediato do Dia 1:</span>
+            <span class="valor-destaque" id="custo_tempo_j1">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Retorno Bruto se Empatar:</span>
+            <span class="valor-destaque" id="retorno_x2_j1">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Lucro Líquido Real:</span>
+            <span class="valor-sucesso" id="lucro_liquido_j1">R$ 0,00</span>
         </div>
     </div>
 
-    <h2>Ecossistema Inicial (A)</h2>
-
-    <!-- JOGO 1 (DIA 1) -->
     <div class="card">
-        <div class="card-title">⚽ Jogo 1 — Cobertura Imediata (Dia 1)</div>
-        <div class="form-group">
-            <input type="text" id="time_j1" placeholder="Nome do Confronto 1">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
+            <span>🦘 Card 2 — Visitante do Jogo 1 (Dia 1)</span>
         </div>
-        <div class="form-group">
-            <label for="odd_x2_j1">Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_x2_j1" value="2.10" step="0.01" oninput="calcularTudo(true)">
+        <div class="input-group">
+            <label>Odd do Visitante (J1)</label>
+            <input type="number" id="odd_j2" value="5.10" step="0.01">
         </div>
-        <div class="stake-control-panel">
-            <label>Definir Stake do Jogo 1 (R$):</label>
-            <div class="stake-input-container">
-                <input type="number" id="input_stake_j1" class="stake-editable-input" value="0.00" step="0.01" oninput="recalcularPorInput('j1')">
-            </div>
-            <div class="control-buttons">
-                <button class="btn-ctrl" onclick="ajustarStake('j1', -5)">-5</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j1', -1)">-1</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j1', 1)">+1</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j1', 5)">+5</button>
-                <button class="btn-ctrl btn-refresh" onclick="reordenarSistema('j1')">🔄</button>
-            </div>
-            <div class="mini-audit-box">
-                <div class="mini-audit-line"><span>Custo no Tempo (M + J3 + J1):</span><span id="custo_tempo_j1">R$ 0.00</span></div>
-                <div class="mini-audit-line"><span>Retorno Bruto X2:</span><span id="retorno_j1">R$ 0.00</span></div>
-                <div class="mini-audit-line"><span>Lucro Líquido Real:</span><strong id="lucro_j1" class="highlight-green">R$ 0.00</strong></div>
-            </div>
+        <label style="margin-bottom: -6px;">Definir/Digitar Stake (R$):</label>
+        <input type="number" class="stake-input" id="stake_j2" value="4.60" step="0.01">
+        <div class="btn-container">
+            <button onclick="ajustar('j2', -5)">-5</button>
+            <button onclick="ajustar('j2', -1)">-1</button>
+            <button onclick="ajustar('j2', 1)">+1</button>
+            <button onclick="ajustar('j2', 5)">+5</button>
+            <button class="ativo" onclick="sincronizarProporcional('j2')">🔄</button>
+        </div>
+        <div class="info-row">
+            <span>Custo Imediato do Dia 1:</span>
+            <span class="valor-destaque" id="custo_tempo_j2">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Retorno Bruto se der Visitante:</span>
+            <span class="valor-destaque" id="retorno_x2_j2">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Lucro Líquido Real:</span>
+            <span class="valor-sucesso" id="lucro_liquido_j2">R$ 0,00</span>
         </div>
     </div>
 
-    <!-- JOGO 2 (DIA 2) -->
     <div class="card">
-        <div class="card-title">⚽ Jogo 2 — Rolagem Condicional (Dia 2)</div>
-        <div class="form-group">
-            <input type="text" id="time_j2" placeholder="Nome do Confronto 2">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
+            <span>🚀 Card 3 — Mandante 1 + Dupla Chance 2 (Acumulada)</span>
         </div>
-        <div class="form-group">
-            <label for="odd_x2_j2">Odd Chance Dupla (X2)</label>
-            <input type="number" id="odd_x2_j2" value="2.02" step="0.01" oninput="calcularTudo(true)">
+        <div class="input-group">
+            <label>Odd da Combinada Acumulada</label>
+            <input type="number" id="odd_j3" value="4.16" step="0.01">
         </div>
-        <div class="stake-control-panel">
-            <label>Definir Stake do Jogo 2 (R$):</label>
-            <div class="stake-input-container">
-                <input type="number" id="input_stake_j2" class="stake-editable-input" value="0.00" step="0.01" oninput="recalcularPorInput('j2')">
-            </div>
-            <div class="control-buttons">
-                <button class="btn-ctrl" onclick="ajustarStake('j2', -5)">-5</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j2', -1)">-1</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j2', 1)">+1</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j2', 5)">+5</button>
-                <button class="btn-ctrl btn-refresh" onclick="reordenarSistema('j2')">🔄</button>
-            </div>
-            <div class="mini-audit-box">
-                <div class="mini-audit-line"><span>Custo no Tempo (M + J3 + J1 + J2):</span><span id="custo_tempo_j2">R$ 0.00</span></div>
-                <div class="mini-audit-line"><span>Retorno Bruto X2:</span><span id="retorno_j2">R$ 0.00</span></div>
-                <div class="mini-audit-line"><span>Lucro Líquido Real:</span><strong id="lucro_j2" class="highlight-green">R$ 0.00</strong></div>
-            </div>
+        <label style="margin-bottom: -6px;">Definir/Digitar Stake (R$):</label>
+        <input type="number" class="stake-input" id="stake_j3" value="6.75" step="0.01">
+        <div class="btn-container">
+            <button onclick="ajustar('j3', -5)">-5</button>
+            <button onclick="ajustar('j3', -1)">-1</button>
+            <button onclick="ajustar('j3', 1)">+1</button>
+            <button onclick="ajustar('j3', 5)">+5</button>
+            <button class="ativo" onclick="sincronizarProporcional('j3')">🔄</button>
         </div>
-    </div>
-
-    <!-- JOGO 3 (DIA 1 - PARALELA) -->
-    <div class="card">
-        <div class="card-title">⚽ Jogo 3 — A Emenda Paralela (Dia 1)</div>
-        <div class="form-group">
-            <input type="text" id="time_j3" placeholder="Nome do Confronto 3">
+        <div class="info-row">
+            <span>Custo Imediato do Dia 1:</span>
+            <span class="valor-destaque" id="custo_tempo_j3">R$ 0,00</span>
         </div>
-        <div class="form-group">
-            <label for="odd_x2_j3">Odd X2 Combinada Acumulada</label>
-            <input type="number" id="odd_x2_j3" value="27.43" step="0.01" oninput="calcularTudo(true)">
+        <div class="info-row">
+            <span>Retorno Bruto da Acumulada:</span>
+            <span class="valor-destaque" id="retorno_bruto_j3">R$ 0,00</span>
         </div>
-        <div class="stake-control-panel">
-            <label>Definir Stake da Emenda (R$):</label>
-            <div class="stake-input-container">
-                <input type="number" id="input_stake_j3" class="stake-editable-input" value="0.00" step="0.01" oninput="recalcularPorInput('j3')">
-            </div>
-            <div class="control-buttons">
-                <button class="btn-ctrl" onclick="ajustarStake('j3', -5)">-5</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j3', -1)">-1</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j3', 1)">+1</button>
-                <button class="btn-ctrl" onclick="ajustarStake('j3', 5)">+5</button>
-                <button class="btn-ctrl btn-refresh" onclick="reordenarSistema('j3')">🔄</button>
-            </div>
-            <div class="mini-audit-box">
-                <div class="mini-audit-line"><span>Custo no Tempo (M + J3 + J1 + J2):</span><span id="custo_tempo_j3">R$ 0.00</span></div>
-                <div class="mini-audit-line"><span>Retorno Bruto da Emenda:</span><span id="retorno_j3">R$ 0.00</span></div>
-                <div class="mini-audit-line"><span>Lucro Líquido Real (Paralelo):</span><strong id="lucro_j3" class="highlight-green">R$ 0.00</strong></div>
-            </div>
+        <div class="info-row">
+            <span>Lucro Líquido Real:</span>
+            <span class="valor-sucesso" id="lucro_liquido_j3">R$ 0,00</span>
         </div>
     </div>
 
-    <!-- 📊 PAINEL DE AUDITORIA DO EXCEL -->
-    <h2>Auditoria & Gestão de Risco</h2>
-    <div class="card" style="border-color: #00b0ff;">
-        <div class="card-title" style="color: #00b0ff;">📊 Consolidação Geral de Caixa</div>
-        <table class="excel-table">
-            <tr>
-                <td class="label-cell">Valor Apostado (Montante Principal):</td>
-                <td class="value-cell" id="audit_montante">R$ 0.00</td>
-            </tr>
-            <tr>
-                <td class="label-cell">Total de Investimento (Gasto Real):</td>
-                <td class="value-cell highlight-blue" id="audit_investimento_total">R$ 0.00</td>
-            </tr>
-            <tr>
-                <td class="label-cell">Lucro Final Líquido (Se a Principal bater):</td>
-                <td class="value-cell highlight-green" id="audit_lucro_final">R$ 0.00</td>
-            </tr>
-            <tr>
-                <td class="label-cell">Conta de Risco (Exposição Proporcional):</td>
-                <td class="value-cell highlight-orange" id="audit_conta_risco">0.00%</td>
-            </tr>
-        </table>
+    <div class="titulo-secao">🛡️ Defesa Opcional Final (Jogo 3)</div>
+    <div class="card" style="border-color: var(--laranja-alerta);">
+        <div class="info-row" style="font-weight: bold; color: var(--laranja-alerta);">
+            <span>🛡️ Contra-Aposta: Dupla Chance do Jogo 3 (Dia 3)</span>
+        </div>
+        <div class="input-group">
+            <label>Montante para a Defesa (R$)</label>
+            <input type="number" id="defesa_montante" value="0.00" step="1.00">
+        </div>
+        <div class="input-group">
+            <label>Odd da Defesa (X2 Visitante)</label>
+            <input type="number" id="defesa_odd" value="2.65" step="0.01">
+        </div>
+        <div class="info-row" style="margin-top: 4px;">
+            <span>Retorno Bruto da Defesa:</span>
+            <span class="valor-destaque" id="defesa_retorno_bruto" style="font-weight: bold;">R$ 0,00</span>
+        </div>
+        <div class="info-row">
+            <span>Lucro Líquido se a Zebra bater:</span>
+            <span id="defesa_lucro_liquido" style="color: var(--laranja-alerta); font-weight: bold;">R$ 0,00</span>
+        </div>
     </div>
+
+    <div class="titulo-secao">📊 Auditoria & Gestão de Risco</div>
+    <div class="card card-auditoria">
+        <div class="info-row" style="font-weight: bold; color: var(--azul-destaque); margin-bottom: 4px;">
+            <span>📊 Consolidação Geral de Caixa</span>
+        </div>
+        
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Valor Apostado (Montante Principal):</span>
+            <span class="auditoria-valor" id="aud_montante">R$ 0,00</span>
+        </div>
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Total de Investimento Inicial (Dia 1):</span>
+            <span class="auditoria-valor azul" id="aud_gasto_real">R$ 0,00</span>
+        </div>
+        <div class="linha-auditoria">
+            <span class="auditoria-label">Lucro Final Líquido (Se a Principal bater):</span>
+            <span class="auditoria-valor" id="aud_lucro_liquido" style="color: var(--verde-sucesso);">R$ 0,00</span>
+        </div>
+    </div>
+
 </div>
 
 <script>
-    // Controle de estado e histórico de montante
-    let manualAdjustments = { j1: 0, j2: 0, j3: 0 };
-    let ultimoMontanteValido = 100.00; 
-    let isFirstLoad = true;
-    let activeScenarioKey = null;
+    // Referências base iniciais
+    const BASE_J1 = 4.55;
+    const BASE_J2 = 4.60;
+    const BASE_J3 = 6.75;
 
-    window.onload = function() {
-        renderizarCenarios();
-        // Na primeira carga, o sistema sugere a base automática matematicamente perfeita para R$100
-        calcularTudo(false);
-    };
+    let manualOverride = { j1: false, j2: false, j3: false };
 
-    /**
-     * 🎛️ GERENCIADOR DE ENTRADA DINÂMICA (A MÁGICA DA PROPORÇÃO ESTÁ AQUI)
-     */
-    function recalcularPorInput(origem) {
-        if (origem === 'principal') {
-            const novoMontante = parseFloat(document.getElementById('montante_principal').value) || 0;
-            
-            // Se o montante mudou de valor e ambos são maiores que zero, escalamos as ordens
-            if (ultimoMontanteValido > 0 && novoMontante > 0) {
-                const fatorProporcao = novoMontante / ultimoMontanteValido;
-                
-                // Reduz ou aumenta todas as stakes usando a mesma escala na mesma hora!
-                manualAdjustments.j1 = parseFloat((manualAdjustments.j1 * fatorProporcao).toFixed(2));
-                manualAdjustments.j2 = parseFloat((manualAdjustments.j2 * fatorProporcao).toFixed(2));
-                manualAdjustments.j3 = parseFloat((manualAdjustments.j3 * fatorProporcao).toFixed(2));
-            }
-            
-            if (novoMontante > 0) {
-                ultimoMontanteValido = novoMontante; // Atualiza a referência para a próxima mudança
-            }
-            
-            isFirstLoad = false; // Desativa a primeira carga pois o usuário já está interagindo
-            calcularTudo(false); // Roda atualizando os inputs visuais na tela
-            return;
-        }
-
-        // Se o usuário mexer diretamente nas caixas de texto das stakes dos jogos
-        if(origem === 'j1') manualAdjustments.j1 = parseFloat(document.getElementById('input_stake_j1').value) || 0;
-        if(origem === 'j2') manualAdjustments.j2 = parseFloat(document.getElementById('input_stake_j2').value) || 0;
-        if(origem === 'j3') manualAdjustments.j3 = parseFloat(document.getElementById('input_stake_j3').value) || 0;
+    function recalcularProporcoesAutomaticas() {
+        const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
         
-        isFirstLoad = false; 
-        calcularTudo(true); // Trava os inputs visuais para não dar loop enquanto digita
-    }
-
-    /**
-     * 🧠 SISTEMA DE AUDITORIA DE CAIXA NO TEMPO
-     */
-    function calcularTudo(ignorarVisualUpdate = false) {
-        const montanteA = parseFloat(document.getElementById('montante_principal').value) || 0;
-        const oddTotal3Mandantes = parseFloat(document.getElementById('odd_total_3_mandantes').value) || 1;
+        // Mantém a proporção base baseada no montante principal se não for alterado manualmente
+        if (!manualOverride.j1) document.getElementById('stake_j1').value = ((BASE_J1 / 10) * montante).toFixed(2);
+        if (!manualOverride.j2) document.getElementById('stake_j2').value = ((BASE_J2 / 10) * montante).toFixed(2);
+        if (!manualOverride.j3) document.getElementById('stake_j3').value = ((BASE_J3 / 10) * montante).toFixed(2);
         
-        const x2_j1 = parseFloat(document.getElementById('odd_x2_j1').value) || 1;
-        const x2_j2 = parseFloat(document.getElementById('odd_x2_j2').value) || 1;
-        const oddX2AcumuladaJ3 = parseFloat(document.getElementById('odd_x2_j3').value) || 1;
-
-        // Sugestão analítica inicial base (Só roda na primeiríssima abertura da tela)
-        if (isFirstLoad) {
-            let sugJ3 = montanteA / (oddX2AcumuladaJ3 - 1);
-            manualAdjustments.j3 = parseFloat(sugJ3.toFixed(2));
-
-            let sugJ1 = (montanteA + manualAdjustments.j3) / (x2_j1 - 1);
-            manualAdjustments.j1 = parseFloat(sugJ1.toFixed(2));
-
-            let sugJ2 = (montanteA + manualAdjustments.j3 + manualAdjustments.j1) / (x2_j2 - 1);
-            manualAdjustments.j2 = parseFloat(sugJ2.toFixed(2));
-            
-            isFirstLoad = false;
-            ultimoMontanteValido = montanteA;
-        }
-
-        const stakeJ1 = Math.max(0, manualAdjustments.j1);
-        const stakeJ2 = Math.max(0, manualAdjustments.j2);
-        const stakeJ3 = Math.max(0, manualAdjustments.j3);
-
-        // Atualiza as caixas de texto das stakes com os valores reajustados pela proporção
-        if (!ignorarVisualUpdate) {
-            document.getElementById('input_stake_j1').value = stakeJ1.toFixed(2);
-            document.getElementById('input_stake_j2').value = stakeJ2.toFixed(2);
-            document.getElementById('input_stake_j3').value = stakeJ3.toFixed(2);
-        }
-
-        // --- LINHA DO TEMPO CRONOLÓGICA DOS CUSTOS ---
-        const custoNoTempoJ1 = montanteA + stakeJ3 + stakeJ1; 
-        const custoNoTempoJ2 = montanteA + stakeJ3 + stakeJ1 + stakeJ2; 
-        const custoNoTempoJ3 = montanteA + stakeJ3 + stakeJ1 + stakeJ2; 
-
-        // Retornos brutos
-        const retBrutoJ1 = stakeJ1 * x2_j1;
-        const retBrutoJ2 = stakeJ2 * x2_j2;
-        const retBrutoJ3 = stakeJ3 * oddX2AcumuladaJ3;
-
-        // Lucros líquidos reais baseados no tempo e na emenda
-        const lucroLiquidoJ1 = retBrutoJ1 - custoNoTempoJ1;
-        const lucroLiquidoJ2 = retBrutoJ2 - custoNoTempoJ2;
-        const lucroLiquidoJ3 = retBrutoJ3 - custoNoTempoJ3;
-
-        // Atualização das Auditorias nos Cards
-        document.getElementById('custo_tempo_j1').innerText = "R$ " + custoNoTempoJ1.toFixed(2);
-        document.getElementById('retorno_j1').innerText = "R$ " + retBrutoJ1.toFixed(2);
-        document.getElementById('lucro_j1').innerText = "R$ " + lucroLiquidoJ1.toFixed(2);
-        aplicarCorLucro('lucro_j1', lucroLiquidoJ1);
-
-        document.getElementById('custo_tempo_j2').innerText = "R$ " + custoNoTempoJ2.toFixed(2);
-        document.getElementById('retorno_j2').innerText = "R$ " + retBrutoJ2.toFixed(2);
-        document.getElementById('lucro_j2').innerText = "R$ " + lucroLiquidoJ2.toFixed(2);
-        aplicarCorLucro('lucro_j2', lucroLiquidoJ2);
-
-        document.getElementById('custo_tempo_j3').innerText = "R$ " + custoNoTempoJ3.toFixed(2);
-        document.getElementById('retorno_j3').innerText = "R$ " + retBrutoJ3.toFixed(2);
-        document.getElementById('lucro_j3').innerText = "R$ " + lucroLiquidoJ3.toFixed(2);
-        aplicarCorLucro('lucro_j3', lucroLiquidoJ3);
-
-        // --- 📊 AUDITORIA DE CAIXA ESTILO EXCEL ---
-        const investimentoTotalGeral = montanteA + stakeJ1 + stakeJ2 + stakeJ3;
-        const retornoPrincipalBruto = montanteA * oddTotal3Mandantes;
-        const lucroFinalLiquidoMúltipla = retornoPrincipalBruto - investimentoTotalGeral;
-        const contaRiscoPercentual = montanteA > 0 ? ((investimentoTotalGeral - montanteA) / montanteA) * 100 : 0;
-
-        document.getElementById('audit_montante').innerText = "R$ " + montanteA.toFixed(2);
-        document.getElementById('audit_investimento_total').innerText = "R$ " + investimentoTotalGeral.toFixed(2);
-        document.getElementById('audit_lucro_final').innerText = "R$ " + lucroFinalLiquidoMúltipla.toFixed(2);
-        document.getElementById('audit_conta_risco').innerText = contaRiscoPercentual.toFixed(2) + "%";
-        aplicarCorLucro('audit_lucro_final', lucroFinalLiquidoMúltipla);
+        calcularEcossistema();
     }
 
-    function ajustarStake(jogo, valor) {
-        manualAdjustments[jogo] += valor;
-        if(manualAdjustments[jogo] < 0) manualAdjustments[jogo] = 0;
+    function detectarDigitacaoManual(jogo) {
+        manualOverride[jogo] = true;
+        calcularEcossistema();
+    }
+
+    function ajustar(jogo, valor) {
+        manualOverride[jogo] = true; 
+        const input = document.getElementById(`stake_${jogo}`);
+        let valorAtual = parseFloat(input.value) || 0;
+        input.value = Math.max(0, parseFloat((valorAtual + valor).toFixed(2)));
+        calcularEcossistema();
+    }
+
+    function sincronizarProporcional(jogo) {
+        const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
+        manualOverride[jogo] = false;
         
-        document.getElementById('input_stake_' + jogo).value = manualAdjustments[jogo].toFixed(2);
-        calcularTudo(true);
-    }
-
-    function reordenarSistema(jogo) {
-        manualAdjustments[jogo] = 0;
-        document.getElementById('input_stake_' + jogo).value = "0.00";
-        calcularTudo(true);
-    }
-
-    function aplicarCorLucro(id, valor) {
-        const elemento = document.getElementById(id);
-        if(valor >= -0.05) {
-            elemento.style.color = "#00e676";
-        } else {
-            elemento.style.color = "#ff5252";
-        }
-    }
-
-    /**
-     * 💾 GESTÃO DE CENÁRIOS NA BANCA
-     */
-    function salvarCenario() {
-        const nomeCenario = document.getElementById('scenario_name').value.trim();
-        if (!nomeCenario) {
-            alert("Por favor, dê um nome ao cenário antes de salvar.");
-            return;
-        }
-
-        const dadosCenario = {
-            nome: nomeCenario,
-            montante: document.getElementById('montante_principal').value,
-            odd_total_3_mandantes: document.getElementById('odd_total_3_mandantes').value,
-            time_j1: document.getElementById('time_j1').value,
-            time_j2: document.getElementById('time_j2').value,
-            time_j3: document.getElementById('time_j3').value,
-            odd_x2_j1: document.getElementById('odd_x2_j1').value,
-            odd_x2_j2: document.getElementById('odd_x2_j2').value,
-            odd_x2_j3: document.getElementById('odd_x2_j3').value,
-            manualAdjustments: manualAdjustments,
-            ultimoMontanteValido: ultimoMontanteValido
-        };
-
-        const key = 'cenario_a_final_' + nomeCenario.replace(/\s+/g, '_').toLowerCase();
-        localStorage.setItem(key, JSON.stringify(dadosCenario));
-        activeScenarioKey = key;
+        if (jogo === 'j1') document.getElementById('stake_j1').value = ((BASE_J1 / 10) * montante).toFixed(2);
+        if (jogo === 'j2') document.getElementById('stake_j2').value = ((BASE_J2 / 10) * montante).toFixed(2);
+        if (jogo === 'j3') document.getElementById('stake_j3').value = ((BASE_J3 / 10) * montante).toFixed(2);
         
-        renderizarCenarios();
-        alert("Cenário '" + nomeCenario + "' gravado com sucesso com as proporções salvas!");
+        calcularEcossistema();
     }
 
-    function carregarCenario(key) {
-        const c = JSON.parse(localStorage.getItem(key));
-        if (!c) return;
+    function calcularEcossistema() {
+        const montantePrincipal = parseFloat(document.getElementById('montante_principal').value) || 0;
+        const oddPrincipal = parseFloat(document.getElementById('odd_principal').value) || 0;
+        const oddJ1 = parseFloat(document.getElementById('odd_j1').value) || 0;
+        const oddJ2 = parseFloat(document.getElementById('odd_j2').value) || 0;
+        const oddJ3 = parseFloat(document.getElementById('odd_j3').value) || 0;
 
-        document.getElementById('scenario_name').value = c.nome;
-        document.getElementById('montante_principal').value = c.montante;
-        document.getElementById('odd_total_3_mandantes').value = c.odd_total_3_mandantes;
-        document.getElementById('time_j1').value = c.time_j1 || "";
-        document.getElementById('time_j2').value = c.time_j2 || "";
-        document.getElementById('time_j3').value = c.time_j3 || "";
-        document.getElementById('odd_x2_j1').value = c.odd_x2_j1;
-        document.getElementById('odd_x2_j2').value = c.odd_x2_j2;
-        document.getElementById('odd_x2_j3').value = c.odd_x2_j3;
-        
-        manualAdjustments = c.manualAdjustments || { j1: 0, j2: 0, j3: 0 };
-        ultimoMontanteValido = c.ultimoMontanteValido ? parseFloat(c.ultimoMontanteValido) : parseFloat(c.montante);
-        activeScenarioKey = key;
+        const stakeJ1 = parseFloat(document.getElementById('stake_j1').value) || 0;
+        const stakeJ2 = parseFloat(document.getElementById('stake_j2').value) || 0;
+        const stakeJ3 = parseFloat(document.getElementById('stake_j3').value) || 0;
 
-        renderizarCenarios();
-        calcularTudo(false);
+        // Elementos da Defesa Final Opcional
+        const defesaMontante = parseFloat(document.getElementById('defesa_montante').value) || 0;
+        const defesaOdd = parseFloat(document.getElementById('defesa_odd').value) || 0;
+
+        // Novo conceito: Tudo no Dia 1 faz parte do Custo Total Inicial
+        const custoTotalDia1 = montantePrincipal + stakeJ1 + stakeJ2 + stakeJ3;
+
+        // Atualiza Retorno Bruto do Topo
+        const retornoBrutoPrincipal = montantePrincipal * oddPrincipal;
+        document.getElementById('txt_retorno_bruto_topo').innerText = `R$ ${retornoBrutoPrincipal.toFixed(2)}`;
+
+        // Cálculos dos cards baseados no Custo Total Unificado do Dia 1
+        const retornoJ1 = stakeJ1 * oddJ1;
+        const lucroJ1 = retornoJ1 - custoTotalDia1;
+
+        const retornoJ2 = stakeJ2 * oddJ2;
+        const lucroJ2 = retornoJ2 - custoTotalDia1;
+
+        const retornoJ3 = stakeJ3 * oddJ3;
+        const lucroJ3 = retornoJ3 - custoTotalDia1;
+
+        // Cálculos do Novo Bloco de Defesa Isolada
+        const defesaRetornoBruto = defesaMontante * defesaOdd;
+        const defesaLucroLiquido = defesaRetornoBruto - (custoTotalDia1 + defesaMontante);
+
+        // Consolidação do Caixa (Descontando a Defesa se ela for preenchida)
+        const lucroFinalPrincipal = retornoBrutoPrincipal - (custoTotalDia1 + defesaMontante);
+
+        // Renderização nas telas
+        document.getElementById('custo_tempo_j1').innerText = `R$ ${custoTotalDia1.toFixed(2)}`;
+        document.getElementById('retorno_x2_j1').innerText = `R$ ${retornoJ1.toFixed(2)}`;
+        document.getElementById('lucro_liquido_j1').innerText = `R$ ${lucroJ1.toFixed(2)}`;
+
+        document.getElementById('custo_tempo_j2').innerText = `R$ ${custoTotalDia1.toFixed(2)}`;
+        document.getElementById('retorno_x2_j2').innerText = `R$ ${retornoJ2.toFixed(2)}`;
+        document.getElementById('lucro_liquido_j2').innerText = `R$ ${lucroJ2.toFixed(2)}`;
+
+        document.getElementById('custo_tempo_j3').innerText = `R$ ${custoTotalDia1.toFixed(2)}`;
+        document.getElementById('retorno_bruto_j3').innerText = `R$ ${retornoJ3.toFixed(2)}`;
+        document.getElementById('lucro_liquido_j3').innerText = `R$ ${lucroJ3.toFixed(2)}`;
+
+        // Renderização do Novo Bloco Opcional
+        document.getElementById('defesa_retorno_bruto').innerText = `R$ ${defesaRetornoBruto.toFixed(2)}`;
+        document.getElementById('defesa_lucro_liquido').innerText = `R$ ${defesaLucroLiquido.toFixed(2)}`;
+
+        // Tabela de Auditoria
+        document.getElementById('aud_montante').innerText = `R$ ${montantePrincipal.toFixed(2)}`;
+        document.getElementById('aud_gasto_real').innerText = `R$ ${custoTotalDia1.toFixed(2)}`;
+        document.getElementById('aud_lucro_liquido').innerText = `R$ ${lucroFinalPrincipal.toFixed(2)}`;
     }
 
-    function deletarCenario(e, key) {
-        e.stopPropagation();
-        if (confirm("Deseja deletar este cenário?")) {
-            localStorage.removeItem(key);
-            if (activeScenarioKey === key) activeScenarioKey = null;
-            renderizarCenarios();
-            calcularTudo(false);
-        }
-    }
+    // Ouvintes de eventos para inputs normais e de digitação direta nas caixas verdes
+    document.getElementById('stake_j1').addEventListener('input', () => detectarDigitacaoManual('j1'));
+    document.getElementById('stake_j2').addEventListener('input', () => detectarDigitacaoManual('j2'));
+    document.getElementById('stake_j3').addEventListener('input', () => detectarDigitacaoManual('j3'));
 
-    function renderizarCenarios() {
-        const container = document.getElementById('scenarios_container');
-        container.innerHTML = '';
-        let keys = Object.keys(localStorage);
-        let achou = false;
+    document.getElementById('montante_principal').addEventListener('input', recalcularProporcoesAutomaticas);
+    document.getElementById('odd_principal').addEventListener('input', calcularEcossistema);
+    document.getElementById('odd_j1').addEventListener('input', calcularEcossistema);
+    document.getElementById('odd_j2').addEventListener('input', calcularEcossistema);
+    document.getElementById('odd_j3').addEventListener('input', calcularEcossistema);
+    
+    document.getElementById('defesa_montante').addEventListener('input', calcularEcossistema);
+    document.getElementById('defesa_odd').addEventListener('input', calcularEcossistema);
 
-        keys.forEach(key => {
-            if (key.startsWith('cenario_a_final_')) {
-                achou = true;
-                const cenario = JSON.parse(localStorage.getItem(key));
-                const item = document.createElement('div');
-                item.className = 'scenario-item' + (activeScenarioKey === key ? ' active' : '');
-                item.onclick = () => carregarCenario(key);
-                item.innerHTML = `<span>📂 ${cenario.nome}</span> <span class="delete-scenario" onclick="deletarCenario(event, '${key}')">×</span>`;
-                container.appendChild(item);
-            }
-        });
-
-        if (!achou) {
-            container.innerHTML = '<span style="color: #607d8b; font-size: 0.85rem; padding: 5px;">Nenhum cenário salvo.</span>';
-        }
-    }
-
-    function limparTela() {
-        document.getElementById('scenario_name').value = '';
-        document.getElementById('time_j1').value = '';
-        document.getElementById('time_j2').value = '';
-        document.getElementById('time_j3').value = '';
-        manualAdjustments = { j1: 0, j2: 0, j3: 0 };
-        ultimoMontanteValido = 100.00;
-        activeScenarioKey = null;
-        isFirstLoad = true;
-        renderizarCenarios();
-        calcularTudo(false);
-    }
+    window.onload = calcularEcossistema;
 </script>
+
 </body>
 </html>
