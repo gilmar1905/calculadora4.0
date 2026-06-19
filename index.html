@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Ecossistema 5.5 - Correção Sistemática</title>
+    <title>Calculadora de Ecossistema Estável</title>
     <style>
         :root {
             --bg-principal: #0d1117;
@@ -383,7 +383,7 @@
 </div>
 
 <script>
-    // Mantendo exatamente as proporções originais da sua versão 5.3
+    // Proporções base travadas (exatamente iguais à versão 5.3)
     let prop_j1 = 0.21;     
     let prop_j2 = 0.17;     
     let prop_j3 = 0.50;     
@@ -397,7 +397,7 @@
         elemento.style.color = valor >= 0 ? 'var(--verde-sucesso)' : 'var(--vermelho-erro)';
     }
 
-    // MEMÓRIA SISTEMÁTICA: O sistema atualiza os campos mantendo o SEU equilíbrio ativo
+    // ESSA FUNÇÃO ATUALIZA AS STAKES IMEDIATAMENTE QUANDO O MONTANTE DO TOPO MUDA
     function recalcularProporcoesAutomaticas() {
         const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
         
@@ -409,8 +409,6 @@
         calcularEcossistema();
     }
 
-    // Correção principal: quando você mexe manualmente nos botões ou digita a stake, 
-    // o sistema grava a NOVA proporção que você escolheu como o novo equilíbrio estável.
     function detectarDigitacaoManual(jogo) {
         desativarBotaoAuto(jogo);
         salvarNovaProporcaoMomento();
@@ -426,9 +424,9 @@
         calcularEcossistema();
     }
 
+    // Se você calibrou manualmente, o sistema aprende qual é a nova proporção ideal baseada no montante atual
     function salvarNovaProporcaoMomento() {
         const montante = parseFloat(document.getElementById('montante_principal').value) || 1;
-        // Se você alterou o campo, a proporção de referência se adapta ao que você escolheu na tela
         if(!modoAutomatico.j1) prop_j1 = (parseFloat(document.getElementById('stake_j1').value) || 0) / montante;
         if(!modoAutomatico.j2) prop_j2 = (parseFloat(document.getElementById('stake_j2').value) || 0) / montante;
         if(!modoAutomatico.j3) prop_j3 = (parseFloat(document.getElementById('stake_j3').value) || 0) / montante;
@@ -502,7 +500,7 @@
         const liquidoCaminhoA = retornoBrutoPrincipal - custoCaminhoA;
         document.getElementById('aud_custo_a').innerText = `R$ ${custoCaminhoA.toFixed(2)}`;
         document.getElementById('aud_retorno_a').innerText = `R$ ${retornoBrutoPrincipal.toFixed(2)}`;
-        gerenciarCorStatus('aud_liquido_a', liquidoCaminhoA);
+        gerenciarCorStatus('aud_liquido_a', liquidoCaminiaA || liquidoCaminhoA);
 
         const custoCaminhoB = custoTotalDia1 + defesaMontante;
         const liquidoCaminhoB = defesaRetornoBruto - custoCaminhoB;
@@ -622,7 +620,7 @@
     document.getElementById('stake_j3').addEventListener('input', () => detectarDigitacaoManual('j3'));
     document.getElementById('defesa_montante').addEventListener('input', () => detectarDigitacaoManual('defesa'));
 
-    // As caixas de ODD agora apenas disparam o cálculo direto, SEM resetar ou bagunçar as proporções ativas
+    // GATILHO CRUCIAL REATIVADO: Alterar o montante no topo agora força a atualização automática das stakes de baixo na hora!
     document.getElementById('montante_principal').addEventListener('input', recalcularProporcoesAutomaticas);
     document.getElementById('odd_principal').addEventListener('input', calcularEcossistema);
     document.getElementById('odd_j1').addEventListener('input', calcularEcossistema);
