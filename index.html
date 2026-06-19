@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Ecossistema 5.2 - Automação Total & Salvamento</title>
+    <title>Calculadora de Ecossistema 5.5 - Correção Sistemática</title>
     <style>
         :root {
             --bg-principal: #0d1117;
@@ -167,7 +167,6 @@
             margin-bottom: 2px;
         }
 
-        /* Estilos do Sistema de Salvamento */
         .select-salvamento {
             background-color: var(--bg-input);
             border: 1px solid var(--borda);
@@ -190,16 +189,14 @@
 
 <div class="container">
 
-    <!-- IDENTIFICAÇÃO DOS JOGOS -->
     <div class="titulo-secao">📝 Identificação da Operação</div>
     <div class="card">
         <div class="input-group">
-            <label>Nome da Operação / Times (Ex: Real Madrid x Barça...)</label>
+            <label>Nome da Operação / Times</label>
             <input type="text" id="nome_operacao" value="Minha Operação Estruturada" placeholder="Digite os times ou nome identificador">
         </div>
     </div>
 
-    <!-- ENTRADA OPERACIONAL -->
     <div class="titulo-secao">💰 Entrada Operacional</div>
     <div class="card">
         <div class="input-group">
@@ -216,10 +213,8 @@
         </div>
     </div>
 
-    <!-- COBERTURAS E AMARRAÇÕES -->
     <div class="titulo-secao">⚽ Coberturas do Ecossistema</div>
     
-    <!-- CARD 1 -->
     <div class="card">
         <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
             <span>🤝 Card 1 — Múltipla do Empate (Jogo 1 + Seguintes)</span>
@@ -251,7 +246,6 @@
         </div>
     </div>
 
-    <!-- CARD 2 -->
     <div class="card">
         <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
             <span>🦘 Card 2 — Múltipla do Visitante (Jogo 1 + Seguintes)</span>
@@ -283,7 +277,6 @@
         </div>
     </div>
 
-    <!-- CARD 3 -->
     <div class="card">
         <div class="info-row" style="font-weight: bold; color: var(--azul-destaque);">
             <span>🚀 Card 3 — Dupla Combinada (Mandante 1 + Dupla Chance 2)</span>
@@ -315,7 +308,6 @@
         </div>
     </div>
 
-    <!-- DEFESA FINAL DO TERCEIRO JOGO -->
     <div class="titulo-secao">🛡️ Defesa Opcional Final (Jogo 3)</div>
     <div class="card" style="border-color: var(--laranja-alerta);">
         <div class="info-row" style="font-weight: bold; color: var(--laranja-alerta);">
@@ -346,14 +338,12 @@
         </div>
     </div>
 
-    <!-- AUDITORIA & GESTÃO DE RISCO -->
     <div class="titulo-secao">📊 Auditoria & Gestão de Risco</div>
     <div class="card card-auditoria">
         <div class="info-row" style="font-weight: bold; color: var(--azul-destaque); margin-bottom: 6px;">
             <span>📊 Consolidação Real do Lucro Líquido de Tudo</span>
         </div>
         
-        <!-- CAMINHO A -->
         <div class="linha-auditoria">
             <div class="auditoria-titulo-bloco">🏆 Caminho A: Múltipla Principal Vencedora</div>
             <div class="auditoria-subgrupo"><span class="auditoria-label">Investimento Total (Dia 1 + Defesa):</span><span class="valor-destaque" id="aud_custo_a">R$ 0,00</span></div>
@@ -361,7 +351,6 @@
             <div class="auditoria-subgrupo"><span class="auditoria-label">Líquido de Tudo (No Bolso):</span><span class="dinamico-status" id="aud_liquido_a">R$ 0,00</span></div>
         </div>
 
-        <!-- CAMINHO B -->
         <div class="linha-auditoria">
             <div class="auditoria-titulo-bloco">🛡️ Caminho B: Defesa do Jogo 3 Vencedora</div>
             <div class="auditoria-subgrupo"><span class="auditoria-label">Investimento Total (Dia 1 + Defesa):</span><span class="valor-destaque" id="aud_custo_b">R$ 0,00</span></div>
@@ -369,7 +358,6 @@
             <div class="auditoria-subgrupo"><span class="auditoria-label">Líquido de Tudo (No Bolso):</span><span class="dinamico-status" id="aud_liquido_b">R$ 0,00</span></div>
         </div>
 
-        <!-- CAMINHO C -->
         <div class="linha-auditoria">
             <div class="auditoria-titulo-bloco">🚀 Caminho C: Dupla Combinada Vencedora (Encerra no J1/J2)</div>
             <div class="auditoria-subgrupo"><span class="auditoria-label">Investimento Total (Apenas Dia 1):</span><span class="valor-destaque" id="aud_custo_c">R$ 0,00</span></div>
@@ -378,7 +366,6 @@
         </div>
     </div>
 
-    <!-- SISTEMA DE BANCO DE DADOS LOCAL -->
     <div class="titulo-secao">💾 Salvar / Carregar Operações</div>
     <div class="card" style="gap: 10px;">
         <div class="input-group">
@@ -396,11 +383,11 @@
 </div>
 
 <script>
-    // Proporções exatas baseadas em uma aposta inicial de R$ 10,00
-    const PROP_J1 = 2.10 / 10.00;
-    const PROP_J2 = 1.70 / 10.00;
-    const PROP_J3 = 5.00 / 10.00;
-    const PROP_DEFESA = 15.00 / 10.00; // Define a proporção de 1.5x do valor de entrada
+    // Mantendo exatamente as proporções originais da sua versão 5.3
+    let prop_j1 = 0.21;     
+    let prop_j2 = 0.17;     
+    let prop_j3 = 0.50;     
+    let prop_defesa = 1.50; 
 
     let modoAutomatico = { j1: true, j2: true, j3: true, defesa: true };
 
@@ -410,19 +397,23 @@
         elemento.style.color = valor >= 0 ? 'var(--verde-sucesso)' : 'var(--vermelho-erro)';
     }
 
+    // MEMÓRIA SISTEMÁTICA: O sistema atualiza os campos mantendo o SEU equilíbrio ativo
     function recalcularProporcoesAutomaticas() {
         const montante = parseFloat(document.getElementById('montante_principal').value) || 0;
         
-        if (modoAutomatico.j1) document.getElementById('stake_j1').value = (montante * PROP_J1).toFixed(2);
-        if (modoAutomatico.j2) document.getElementById('stake_j2').value = (montante * PROP_J2).toFixed(2);
-        if (modoAutomatico.j3) document.getElementById('stake_j3').value = (montante * PROP_J3).toFixed(2);
-        if (modoAutomatico.defesa) document.getElementById('defesa_montante').value = (montante * PROP_DEFESA).toFixed(2);
+        if (modoAutomatico.j1) document.getElementById('stake_j1').value = (montante * prop_j1).toFixed(2);
+        if (modoAutomatico.j2) document.getElementById('stake_j2').value = (montante * prop_j2).toFixed(2);
+        if (modoAutomatico.j3) document.getElementById('stake_j3').value = (montante * prop_j3).toFixed(2);
+        if (modoAutomatico.defesa) document.getElementById('defesa_montante').value = (montante * prop_defesa).toFixed(2);
         
         calcularEcossistema();
     }
 
+    // Correção principal: quando você mexe manualmente nos botões ou digita a stake, 
+    // o sistema grava a NOVA proporção que você escolheu como o novo equilíbrio estável.
     function detectarDigitacaoManual(jogo) {
         desativarBotaoAuto(jogo);
+        salvarNovaProporcaoMomento();
         calcularEcossistema();
     }
 
@@ -431,7 +422,17 @@
         const input = document.getElementById(jogo === 'defesa' ? 'defesa_montante' : `stake_${jogo}`);
         let valorAtual = parseFloat(input.value) || 0;
         input.value = Math.max(0, parseFloat((valorAtual + valor).toFixed(2)));
+        salvarNovaProporcaoMomento();
         calcularEcossistema();
+    }
+
+    function salvarNovaProporcaoMomento() {
+        const montante = parseFloat(document.getElementById('montante_principal').value) || 1;
+        // Se você alterou o campo, a proporção de referência se adapta ao que você escolheu na tela
+        if(!modoAutomatico.j1) prop_j1 = (parseFloat(document.getElementById('stake_j1').value) || 0) / montante;
+        if(!modoAutomatico.j2) prop_j2 = (parseFloat(document.getElementById('stake_j2').value) || 0) / montante;
+        if(!modoAutomatico.j3) prop_j3 = (parseFloat(document.getElementById('stake_j3').value) || 0) / montante;
+        if(!modoAutomatico.defesa) prop_defesa = (parseFloat(document.getElementById('defesa_montante').value) || 0) / montante;
     }
 
     function alternarModo(jogo) {
@@ -514,7 +515,6 @@
         gerenciarCorStatus('aud_liquido_c', lucroJ3);
     }
 
-    // --- LOGICA DE PERSISTENCIA (LOCALSTORAGE) ---
     function salvarOperacao() {
         const nome = document.getElementById('nome_operacao').value.trim();
         if(!nome) { alert('Digite o nome dos times/operação primeiro!'); return; }
@@ -534,7 +534,8 @@
             modo_j3: modoAutomatico.j3,
             defesa_montante: document.getElementById('defesa_montante').value,
             modo_defesa: modoAutomatico.defesa,
-            defesa_odd: document.getElementById('defesa_odd').value
+            defesa_odd: document.getElementById('defesa_odd').value,
+            p_j1: prop_j1, p_j2: prop_j2, p_j3: prop_j3, p_def: prop_defesa
         };
 
         let db = JSON.parse(localStorage.getItem('ecossistema_db')) || {};
@@ -558,6 +559,8 @@
             document.getElementById('montante_principal').value = dados.montante_principal;
             document.getElementById('odd_principal').value = dados.odd_principal;
             
+            if(dados.p_j1) { prop_j1 = dados.p_j1; prop_j2 = dados.p_j2; prop_j3 = dados.p_j3; prop_defesa = dados.p_def; }
+
             document.getElementById('odd_j1').value = dados.odd_j1;
             document.getElementById('stake_j1').value = dados.stake_j1;
             if(!dados.modo_j1) desativarBotaoAuto('j1'); else restaurarAuto('j1');
@@ -614,12 +617,12 @@
         }
     }
 
-    // Ouvintes de eventos
     document.getElementById('stake_j1').addEventListener('input', () => detectarDigitacaoManual('j1'));
     document.getElementById('stake_j2').addEventListener('input', () => detectarDigitacaoManual('j2'));
     document.getElementById('stake_j3').addEventListener('input', () => detectarDigitacaoManual('j3'));
     document.getElementById('defesa_montante').addEventListener('input', () => detectarDigitacaoManual('defesa'));
 
+    // As caixas de ODD agora apenas disparam o cálculo direto, SEM resetar ou bagunçar as proporções ativas
     document.getElementById('montante_principal').addEventListener('input', recalcularProporcoesAutomaticas);
     document.getElementById('odd_principal').addEventListener('input', calcularEcossistema);
     document.getElementById('odd_j1').addEventListener('input', calcularEcossistema);
